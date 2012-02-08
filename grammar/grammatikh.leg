@@ -108,12 +108,12 @@ char *trailingBang (char *string);
 void onUse(void *this, char *name);
 void onImport (void *this, char *path, char *name);
 
-void onStructStart(void *this, char *name, char *doc);
+void onStructStart(void *this, char *name);
 void onStructBody(void *this);
 void onStructEnd(void *this);
 
 void onVarDeclStart(void *this);
-void onVarDeclName(void *this, char *name, char *doc);
+void onVarDeclName(void *this, char *name);
 void onVarDeclExtern(void *this, char *externName);
 void onVarDeclUnmangled(void *this, char *unmangledName);
 void onVarDeclExpr(void *this, void *expr);
@@ -134,7 +134,7 @@ void onFuncTypeArgument(void *this, void *funcType, void *argType);
 void onFuncTypeVarArg(void *this, void *funcType);
 void onFuncTypeReturnType(void *this, void *funcType, void *returnType);
 
-void onFunctionStart(void *this, char *name, char *doc);
+void onFunctionStart(void *this, char *name);
 void onFunctionExtern(void *this, char *externName);
 void onFunctionUnmangled(void *this, char *unmangledName);
 void onFunctionArgsStart(void *this);
@@ -299,7 +299,6 @@ Import  = IMPORT_KW [ \t]
 
 ImportAtom = path:ImportPath
             ((name:ImportName { tokenPosPlusOne; }             { onImport(core->this, (char*) path, (char*) name) }
-             (- INTO_KW - namespace:IDENT               { onImportNamespace(core->this, (char*) namespace, 1) })?
              ) | (
             '[' { core->importQuantity = 0; }
             (name:ImportName { tokenPosPlusOne; } - ',' WS   { core->importQuantity++; onImport(core->this, (char*) path, (char*) name) })*
@@ -312,13 +311,13 @@ ImportName = < ([A-Za-z_0-9] | "-")+ >                { $$=StringClone(yytext) }
 
 
 Decl    = ( FunctionDecl
-          | StructureDecl
+          | StructDecl
           | vd:VariableDecl Terminator+ { onStatement(core->this, vd) }
           )
 
 FunctionDecl =
             FUNC_KW
-            name:IDENT { tokenPos; onFunctionStart(core->this, name, doc) }
+            name:IDENT { tokenPos; onFunctionStart(core->this, name) }
 
             # modifiers
             (-  ( externName:ExternName  { onFunctionExtern(core->this, externName) }
@@ -364,7 +363,7 @@ Argument    = ( vd:VariableDecl          { tokenPos; onStatement(core->this, vd)
 
 StructDecl = (
             STRUCT_KW
-            structName:IDENT { tokenPos; onClassStart(core->this, structName, doc) }
+            structName:IDENT { tokenPos; onStructStart(core->this, structName) }
             -
             # modifiers
             (- ( ExternName
@@ -372,7 +371,7 @@ StructDecl = (
             )*
             WS
             EOL
-            { onClassBody(core->this); }
+            { onStructBody(core->this); }
 
             (
                 # structdecl contents
@@ -384,8 +383,7 @@ StructDecl = (
                 WS
                 END_KW ~{ error(core->this, EXP_VAR_OR_FUNC_DECL, "Expected variable declaration or function declaration\n", G->pos + G->offset); }
             )
-            ) { onClassEnd(core->this) }
-                     )
+            ) { onStructEnd(core->this) }
 
 ExternName = EXTERN_KW { $$="" }
               (
@@ -405,14 +403,13 @@ VariableDecl =
             { onVarDeclStart(core->this); }
 
             (
-            varDeclName:IDENT { tokenPos; onVarDeclName(core->this, varDeclName, doc); }
+            varDeclName:IDENT { tokenPos; onVarDeclName(core->this, varDeclName); }
             (- ASS - Expr { onVarDeclExpr(core->this, $$); })?
 
             # multi-decls
             (
             - ','
-            doc: OocDoc
-            WS nextDeclName:IDENT { onVarDeclName(core->this, nextDeclName, doc); }
+            WS nextDeclName:IDENT { onVarDeclName(core->this, nextDeclName); }
             (- ASS - Expr { onVarDeclExpr(core->this, $$); })?
             -
             )*
@@ -430,7 +427,7 @@ VariableDecl =
 
 
 TypeBase = FuncType |
-          (< { tokenPos; core->typeBuffer[0]='\0'; } (CONST_KW -)?
+          (< { tokenPos; core->typeBuffer[0]='\0'; }
             (
                 ( "unsigned"                                  { strcat(core->typeBuffer, "unsigned "); } -
                 | "signed"                                    { strcat(core->typeBuffer, "signed "); } -
@@ -553,8 +550,7 @@ BinaryOperation = Assignment
 
 Assignment = l: Ternary
                 ( ASS            { tokenPos; }  WS   r: Ternary               { $$=l=onAssign(core->this, l, r); }
-                # The following line is actually the only case where AnonymousFunctionDecl makes sense at this level of precedence.
-                | ASS            { tokenPos; }  WS   r: AnonymousFunctionDecl ~{  missingOp("<-") }   { $$=l=onAssign(core->this, l, r); }
+                | ASS            { tokenPos; }  WS   r: Ternary ~{  missingOp("<-") }   { $$=l=onAssign(core->this, l, r); }
                 )*
 
 Ternary =   cond:LogicalOr
@@ -642,7 +638,7 @@ Access =  ((ident:IDENT_CORE { tokenPos; } '&' ![&=] - { core->token[1] += 1; $$
 FunctionCall = callName:IDENT { tokenPos; onFunctionCallStart(core->this, callName); }
                FunctionCallCore { $$=onFunctionCallEnd(core->this); }
 
-FunctionCallCore = (B_NOT - callSuffix:IDENT { onFunctionCallSuffix(core->this, callSuffix); })?
+FunctionCallCore =
                WS
 	       (
                 ( e:Expr { tokenPos; onFunctionCallArg(core->this, e); }
@@ -657,9 +653,9 @@ FunctionCallCore = (B_NOT - callSuffix:IDENT { onFunctionCallSuffix(core->this, 
                WS
 
 ACS = (
-        { tokenPos; onFunctionStart(core->this, "", ""); onFunctionArgsStart(core->this); }
+        { tokenPos; onFunctionStart(core->this, ""); onFunctionArgsStart(core->this); }
         '|' WS?
-        ( i:IDENT { tokenPos; onVarDeclStart(core->this); onVarDeclName(core->this, i, ""); onStatement(core->this, onVarDeclEnd(core->this));  }
+        ( i:IDENT { tokenPos; onVarDeclStart(core->this); onVarDeclName(core->this, i); onStatement(core->this, onVarDeclEnd(core->this));  }
           (WS ',' WS)?
         )*
         '|' WS { onFunctionArgsEnd(core->this); }
@@ -727,20 +723,13 @@ KW           = BREAK_KW | CONTINUE_KW | RETURN_KW | FUNC_KW
              | NULL_KW | END_KW | THEN_KW
 
 DOT          = !DOUBLE_DOT '.'
-COLON        = !ASS_DECL ':'
+COLON        = ':'
 
-L_ARROW      = '<-'
 R_ARROW      = '->'
-DOUBLE_ARROW = '=>'
 
 # Operators
 
 ASS          = '<-' -
-ASS_B_RSHIFT = '>>='  -
-ASS_B_LSHIFT = '<<='  -
-ASS_B_XOR    = '^='  -
-ASS_B_OR     = '|='  -
-ASS_B_AND    = '&='  -
 
 QUEST        = '?'   -
 
@@ -759,7 +748,6 @@ NOT_EQUALS   = '<>'  -
 
 LESSTHAN     = '<'  !'=' -
 MORETHAN     = '>'  !'=' -
-CMP          = '<=>' -
 LESSTHAN_EQ  = '<='  -
 MORETHAN_EQ  = '>='  -
 
@@ -792,7 +780,7 @@ WS         = ([ \t] | Comment | EOL)*
 
 Comment = (CommentLine | CommentMultiLine)
 CommentLine = "//" !'/' (!EOL .)* EOL
-CommentMultiLine =    "/*" !'*' (!"*/" (EOL | CommentMultiLineWithDocs | .))* CLOS_COMMENT ~{ error(core->this, UNCLOSED_COMMENT, "Unclosed multi-line comment!\n", G->pos + G->offset); }
+CommentMultiLine =    "/*" !'*' (!"*/" (EOL | .))* CLOS_COMMENT ~{ error(core->this, UNCLOSED_COMMENT, "Unclosed multi-line comment!\n", G->pos + G->offset); }
 
 OCT_LIT      = < "0c" [0-8] [0-8_]* >
 BIN_LIT      = < "0b" [01] [01_]* >
@@ -824,7 +812,7 @@ int parse(void *this, char *path) {
     GREG *G = YY_ALLOC(sizeof(GREG), 0);
     G->buflen = 0;
 
-    NagaQueenCore *core = YY_ALLOC(sizeof(NagaQueenCore), 0);
+    Core *core = YY_ALLOC(sizeof(Core), 0);
     core->yylineno = 0;
     core->this = this;
     core->path = path;
