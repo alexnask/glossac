@@ -7,3 +7,4 @@ Note that this compiler is purely experimental/a toy and is writen with the sole
 Tools used:<br/>
 [nddrylliog/greg](https://github.com/nddrylliog/greg) (recursive-descent parser generator)<br/>
 [nddrylliog/rock](https://github.com/nddrylliog/rock) (ooc compiler writen in ooc)
+[Boehm GC](http://www.hpl.hp.com/personal/Hans_Boehm/gc/)
