@@ -5,5 +5,5 @@ Glossa (Γλώσσα) is a greek pseudo-language. The glossa compiler takes glos
 Note that this compiler is purely experimental/a toy and is writen with the sole purpose of practise.
 <br/>
 Tools used:<br/>
-[nddrylliog/greg](https://github.com/nddrylliog/greg) (decent recursive grammar generator)<br/>
+[nddrylliog/greg](https://github.com/nddrylliog/greg) (recursive-descent parser generator)<br/>
 [nddrylliog/rock](https://github.com/nddrylliog/rock) (ooc compiler writen in ooc)
