@@ -505,8 +505,9 @@ If      = (
 Else    = (
           ELSE_KW  { tokenPos; }
                          { onElseStart(core->this); }
-          - WS EOL
+          - EOL
           - Body
+          - END_KW
           )              { $$=onElseEnd(core->this); }
 
 FlowControl = (Foreach | While | Break | Continue)
@@ -789,8 +790,8 @@ FLOAT_LIT    = < "-"? [0-9_]+ DOT [0-9_]* >        -
 DEC_LIT      = < "-"? [0-9] [0-9_]* >                   -
 
 IDENT        = i:IDENT_CORE -
-IDENT_CORE   = !(KW ![A-Za-z0-9_])  # a keyword is not an ident
-               < [a-zA-Z_][0-9a-zA-Z_]* > { $$=yytext; }
+IDENT_CORE   = !(KW ![A-Za-z0-9Α-Ωα-ω_])  # a keyword is not an ident
+               < [a-zA-Zα-ωΑ-Ω_][0-9a-zA-Zα-ωΑ-Ω_]* > { $$=yytext; }
                ( '?' { $$=trailingQuest($$); }
                | '!' { $$=trailingBang($$); })?
                
