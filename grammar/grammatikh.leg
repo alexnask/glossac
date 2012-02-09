@@ -316,23 +316,19 @@ Decl    = ( FunctionDecl
           )
 
 FunctionDecl =
-            FUNC_KW
+            FUNC_KW -
             name:IDENT { tokenPos; onFunctionStart(core->this, name) }
-
             # modifiers
             (-  ( externName:ExternName  { onFunctionExtern(core->this, externName) }
                 | unmangledName:UnmangledName { onFunctionUnmangled(core->this, unmangledName) }
                 )
             )*
-
-            FunctionDeclBody
-            - END_KW
-
+            - FunctionDeclBody
 
 FunctionDeclBody = (
             # arguments are optional
             (
-                (          WS Argument WS
+                (   WS Argument WS
                     (',' WS Argument WS)*
                 )?
                               { onFunctionArgsEnd(core->this) }
@@ -344,16 +340,16 @@ FunctionDeclBody = (
                 - t:Type ~{ error(core->this, EXP_RET_TYPE, "Missing return type.\n", G->pos + G->offset) }
                           { onFunctionReturnType(core->this, t) }
             )?
-
+            - IS_KW
+            - EOL
             # body is optional (for abstract/extern-named functions)
             (
                 { onFunctionBody(core->this); }
-                WS EOL
                 (WS
                 (s:Stmt  { onStatement(core->this, s) })
                 WS)*
-                WS END_KW ~{ rewindWhiteSpace; error(core->this, EXP_STATEMENT_OR_CLOSING_BRACKET, "Malformed statement or end keyword missing\n", G->pos + G->offset) }
             )?
+            WS END_KW ~{ rewindWhiteSpace; error(core->this, EXP_STATEMENT_OR_CLOSING_BRACKET, "Malformed statement or end keyword missing\n", G->pos + G->offset) }
             ) { $$=onFunctionEnd(core->this); }
 
 Argument    = ( vd:VariableDecl          { tokenPos; onStatement(core->this, vd) }
@@ -362,18 +358,16 @@ Argument    = ( vd:VariableDecl          { tokenPos; onStatement(core->this, vd)
               )
 
 StructDecl = (
-            STRUCT_KW
+            STRUCT_KW -
             structName:IDENT { tokenPos; onStructStart(core->this, structName) }
-            -
             # modifiers
             (- ( ExternName
                 )
             )*
-            WS
-            EOL
+            - EOL
             { onStructBody(core->this); }
 
-            (
+            (-
                 # structdecl contents
                 (WS
                     ( vd:VariableDecl { tokenPos; onStatement(core->this, vd); } Terminator+
@@ -381,8 +375,8 @@ StructDecl = (
                 WS)*
 
                 WS
-                END_KW ~{ error(core->this, EXP_VAR_OR_FUNC_DECL, "Expected variable declaration or function declaration\n", G->pos + G->offset); }
             )
+            - END_KW
             ) { onStructEnd(core->this) }
 
 ExternName = EXTERN_KW { $$="" }
@@ -630,7 +624,7 @@ Access =  ((ident:IDENT_CORE { tokenPos; } '&' ![&=] - { core->token[1] += 1; $$
                     - ']' - { $$=l=onArrayAccessEnd(core->this); }
                  )
                 | - call:FunctionCall                   { onFunctionCallExpr(core->this, call, l); $$=l=call; }
-                | - r:IDENT_CORE { tokenPos; $$=l=onVarAccess(core->this, l, r); }
+                | - '.' r:IDENT_CORE { tokenPos; $$=l=onVarAccess(core->this, l, r); }
                 | - AS_KW { tokenPos; } -  r:Type       { $$=l=onCast(core->this, l, r); }
                 | '&' ![&=] - &([ \t\r\n;,)}] | ']')    { core->token[1] += 1; $$=l=onAddressOf(core->this, l); }
                 | '@'                                    { $$=l=onDereference(core->this, l); }
@@ -698,6 +692,7 @@ RETURN_KW    = "Γύρνα"
 END_KW       = "Τέλος"
 
 FUNC_KW      = "Συνάρτηση"
+IS_KW        = "είναι"
 STRUCT_KW    = "Δομή"
 EXTERN_KW    = "εξωτερική"
 UNMANGLED_KW = "unmangled"
@@ -721,7 +716,7 @@ NULL_KW      = "null"
 KW           = BREAK_KW | CONTINUE_KW | RETURN_KW | FUNC_KW
              | STRUCT_KW | EXTERN_KW | UNMANGLED_KW | IMPORT_KW
              | IF_KW | ELSE_KW | FOR_KW | WHILE_KW | AS_KW
-             | NULL_KW | END_KW | THEN_KW
+             | NULL_KW | END_KW | THEN_KW | IS_KW
 
 DOT          = !DOUBLE_DOT '.'
 COLON        = ':'

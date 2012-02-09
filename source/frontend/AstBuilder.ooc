@@ -23,26 +23,69 @@ computeReservedHashs: func (words: String[]) -> ArrayList<Int> {
 }
 */
 
+Expression: class {}
+Type: class {}
+TypeList: class {}
+FuncType: class extends Type {}
+FunctionDecl: class {}
+FunctionCall: class {}
+
+StringLiteral: class {}
+IntLiteral: class {}
+FloatLiteral: class {}
+CharLiteral: class {}
+BoolLiteral: class {}
+NullLiteral: class {}
+RangeLiteral: class {}
+
+Statement: class {}
+ArrayAccess: class {}
+Return: class {}
+VariableAccess: class {}
+Cast: class {}
+Block: class {}
+
+If: class {}
+Else: class {}
+Foreach: class {}
+While: class {}
+FlowControl: class {}
+
+Comparison: class {}
+UnaryOp: class {}
+BinaryOp: class {}
+Ternary: class {}
+Parenthesis: class {}
+AddressOf: class {}
+Dereference: class {}
+
+
 AstBuilder: class {
 
     stack: Stack<Object>
     tokenPos : Int*
+    
+    init: func(path: String) {
+        parse(this, path toCString())
+    }
 
     onUse: unmangled(onUse) func (name: CString) {
-        module addUse(Use new(name toString(), params, token()))
+        //module addUse(Use new(name toString(), params, token()))
     }
 
     onImport: unmangled(onImport) func (path, name: CString) {
+        /*
         namestr := name toString()
         output : String = ((path == null) || (path@ == '\0')) ? namestr : path toString() + namestr
         module addImport(Import new( output , token()))
+        */
     }
 
     /*
      * Structures
      */
 
-    onStructStart: unmangled(onClassStart) func (name) {
+    onStructStart: unmangled(onStructStart) func (name: CString) {
         /*
         cDecl := ClassDecl new(name toString(), token())
         cDecl setVersion(getVersion())
@@ -53,11 +96,11 @@ AstBuilder: class {
         */
     }
 
-    onStructBody: unmangled(onClassBody) func {
+    onStructBody: unmangled(onStructBody) func {
         //peek(ClassDecl) addDefaultInit()
     }
 
-    onStructEnd: unmangled(onClassEnd) func {
+    onStructEnd: unmangled(onStructEnd) func {
         //pop(ClassDecl)
     }
 
@@ -69,7 +112,7 @@ AstBuilder: class {
         //stack push(Stack<VariableDecl> new())
     }
 
-    onVarDeclName: unmangled(onVarDeclName) func (name) {
+    onVarDeclName: unmangled(onVarDeclName) func (name: CString) {
         //vDecl := VariableDecl new(null, name toString(), token())
         //vDecl doc = doc toString()
         //peek(Stack<VariableDecl>) push(vDecl)
@@ -85,7 +128,7 @@ AstBuilder: class {
             if(vars getSize() != 1) {
                 params errorHandler onError(SyntaxError new(token(), "Trying to set an extern name on several variables at once!"))
             }
-            vars peek() setExternName(externName)
+            vars peek() setExternName(externname: CString)
         }
         */
     }
@@ -100,7 +143,7 @@ AstBuilder: class {
             if(vars getSize() != 1) {
                 params errorHandler onError(SyntaxError new(token(), "Trying to set an unmangled name on several variables at once!"))
             }
-            vars peek() setUnmangledName(unmangledName)
+            vars peek() setUnmangledName(unmangledname: CString)
         }
         */
     }
@@ -118,6 +161,7 @@ AstBuilder: class {
     }
 
     onVarDeclEnd: unmangled(onVarDeclEnd) func -> Object {
+        null
         /*
         stack := pop(Stack<VariableDecl>)
         if(stack getSize() == 1) return stack peek() as Object
@@ -155,18 +199,22 @@ AstBuilder: class {
      */
 
     onTypeNew: unmangled(onTypeNew) func (name: CString) -> Type {
+        null
         //BaseType new(name toString() trim(), token())
     }
 
     onTypePointer: unmangled(onTypePointer) func (type: Type) -> Type {
+        null
         //PointerType new(type, token())
     }
-s
+
     onTypeBrackets: unmangled(onTypeBrackets) func (type: Type, inner: Expression) -> Type {
+        null
         //ArrayType new(type, inner, token())
     }
 
     onTypeList: unmangled(onTypeList) func -> TypeList {
+        null
         //TypeList new(token())
     }
 
@@ -179,6 +227,7 @@ s
      */
 
     onFuncTypeNew: unmangled(onFuncTypeNew) func -> FuncType {
+        null
         /*
         f := FuncType new(token())
         f isClosure = true
@@ -204,7 +253,7 @@ s
      * Functions
      */
 
-    onFunctionStart: unmangled(onFunctionStart) func (name) {
+    onFunctionStart: unmangled(onFunctionStart) func (name: CString) {
         /*
         fDecl := FunctionDecl new(name toString(), token())
         fDecl setVersion(getVersion())
@@ -238,6 +287,7 @@ s
     }
 
     onFunctionEnd: unmangled(onFunctionEnd) func -> FunctionDecl {
+        null
         /*
         fDecl := pop(FunctionDecl)
 
@@ -266,6 +316,7 @@ s
     }
 
     onFunctionCallEnd: unmangled(onFunctionCallEnd) func -> FunctionCall {
+        null
         //pop(FunctionCall)
     }
 
@@ -278,11 +329,13 @@ s
      */
 
     onStringLiteral: unmangled(onStringLiteral) func (text: CString) -> StringLiteral {
-        StringLiteral new(text toString() replaceAll("\n", "\\n") replaceAll("\t", "\\t"), token())
+        null
+        //StringLiteral new(text toString() replaceAll("\n", "\\n") replaceAll("\t", "\\t"), token())
     }
 
     onCharLiteral: unmangled(onCharLiteral) func (value: CString) -> CharLiteral {
-        CharLiteral new(value toString(), token())
+        null
+        //CharLiteral new(value toString(), token())
     }
 
     // statement
@@ -356,7 +409,7 @@ s
                 }
                 tuple getElements() add(stmt as Expression)
             case =>
-                "[gotStatement] Got a %s, don't know what to do with it, parent = %s\n" printfln(stmt toString(), node class name)
+                "[gotStatement] Got a %s, don't know what to do with it, parent = %s\n" printfln(stmt toString(), node class name: CString)
         }
         */
     }
@@ -366,21 +419,25 @@ s
     }
 
     onArrayAccessEnd: unmangled(onArrayAccessEnd) func () -> ArrayAccess {
+        null
         //pop(ArrayAccess)
     }
 
     // return
     onReturn: unmangled(onReturn) func (expr: Expression) -> Return {
+        null
         //Return new(expr, token())
     }
 
     // variable access
     onVarAccess: unmangled(onVarAccess) func (expr: Expression, name: CString) -> VariableAccess {
+        null
         //return VariableAccess new(expr, name toString(), token())
     }
 
     // cast
     onCast: unmangled(onCast) func (expr: Expression, type: Type) -> Cast {
+        null
         //return Cast new(expr, type, token())
     }
 
@@ -390,6 +447,7 @@ s
     }
 
     onBlockEnd: unmangled(onBlockEnd) func -> Block {
+        null
         //pop(Block)
     }
 
@@ -399,6 +457,7 @@ s
     }
 
     onIfEnd: unmangled(onIfEnd) func -> If {
+        null
         //pop(If)
     }
 
@@ -408,6 +467,7 @@ s
     }
 
     onElseEnd: unmangled(onElseEnd) func -> Else {
+        null
         //pop(Else)
     }
 
@@ -422,6 +482,7 @@ s
     }
 
     onForeachEnd: unmangled(onForeachEnd) func -> Foreach {
+        null
         //pop(Foreach)
     }
 
@@ -431,6 +492,7 @@ s
     }
 
     onWhileEnd: unmangled(onWhileEnd) func -> While {
+        null
         //pop(While)
     }
 
@@ -447,176 +509,187 @@ s
     }
 
     onBreak: unmangled(onBreak) func -> FlowControl {
+        null
         //FlowControl new(FlowAction _break, token())
     }
 
     onContinue: unmangled(onContinue) func -> FlowControl {
+        null
         //FlowControl new(FlowAction _continue, token())
     }
 
     onEquals: unmangled(onEquals) func (left, right: Expression) -> Comparison {
+        null
         //Comparison new(left, right, CompType equal, token())
     }
 
     onNotEquals: unmangled(onNotEquals) func (left, right: Expression) -> Comparison {
+        null
         //Comparison new(left, right, CompType notEqual, token())
     }
 
     onLessThan: unmangled(onLessThan) func (left, right: Expression) -> Comparison {
+        null
         //Comparison new(left, right, CompType smallerThan, token())
     }
 
     onMoreThan: unmangled(onMoreThan) func (left, right: Expression) -> Comparison {
+        null
         //Comparison new(left, right, CompType greaterThan, token())
     }
 
     onLessThanOrEqual: unmangled(onLessThanOrEqual) func (left, right: Expression) -> Comparison {
+        null
         //Comparison new(left, right, CompType smallerOrEqual, token())
     }
     onMoreThanOrEqual: unmangled(onMoreThanOrEqual) func (left, right: Expression) -> Comparison {
+        null
         //Comparison new(left, right, CompType greaterOrEqual, token())
     }
 
     onDecLiteral: unmangled(onDecLiteral) func (value: CString) -> IntLiteral {
+        null
         //IntLiteral new(value toString() replaceAll("_", "") toLLong(), token())
     }
 
     onOctLiteral: unmangled(onOctLiteral) func (value: CString) -> IntLiteral {
+        null
         //IntLiteral new(value toString() replaceAll("_", "") substring(2) toLLong(8), token())
     }
 
     onBinLiteral: unmangled(onBinLiteral) func (value: CString) -> IntLiteral {
+        null
         //IntLiteral new(value toString() replaceAll("_", "") substring(2) toLLong(2), token())
     }
 
     onHexLiteral: unmangled(onHexLiteral) func (value: CString) -> IntLiteral {
+        null
         //IntLiteral new(value toString() replaceAll("_", "") toLLong(16), token())
     }
 
     onFloatLiteral: unmangled(onFloatLiteral) func (value: CString) -> FloatLiteral {
+        null
         //FloatLiteral new(value toString() replaceAll("_", ""), token())
     }
 
     onBoolLiteral: unmangled(onBoolLiteral) func (value: Bool) -> BoolLiteral {
+        null
         //BoolLiteral new(value, token())
     }
 
     onNull: unmangled(onNull) func -> NullLiteral {
+        null
         //NullLiteral new(token())
     }
 
     onTernary: unmangled(onTernary) func (condition, ifTrue, ifFalse: Expression) -> Ternary {
+        null
         //Ternary new(condition, ifTrue, ifFalse, token())
     }
 
     onAssign: unmangled(onAssign) func (left, right: Expression) -> BinaryOp {
+        null
         //BinaryOp new(left, right, OpType ass, token())
     }
 
     onAdd: unmangled(onAdd) func (left, right: Expression) -> BinaryOp {
+        null
         //BinaryOp new(left, right, OpType add, token())
     }
 
     onSub: unmangled(onSub) func (left, right: Expression) -> BinaryOp {
+        null
         //BinaryOp new(left, right, OpType sub, token())
     }
 
     onMod: unmangled(onMod) func (left, right: Expression) -> BinaryOp {
+        null
         //BinaryOp new(left, right, OpType mod, token())
     }
 
     onMul: unmangled(onMul) func (left, right: Expression) -> BinaryOp {
+        null
         //BinaryOp new(left, right, OpType mul, token())
+    }
+    
+    onExp: unmangled(onExp) func(left, right: Expression) -> BinaryOp {
+        null
     }
 
     onDiv: unmangled(onDiv) func (left, right: Expression) -> BinaryOp {
+        null
         //BinaryOp new(left, right, OpType div, token())
     }
 
     onRangeLiteral: unmangled(onRangeLiteral) func (left, right: Expression) -> RangeLiteral {
+        null
         //RangeLiteral new(left, right, token())
     }
 
     onBinaryLeftShift: unmangled(onBinaryLeftShift) func (left, right: Expression) -> BinaryOp {
+        null
         //BinaryOp new(left, right, OpType lshift, token())
     }
 
     onBinaryRightShift: unmangled(onBinaryRightShift) func (left, right: Expression) -> BinaryOp {
+        null
         //BinaryOp new(left, right, OpType rshift, token())
     }
 
     onLogicalOr: unmangled(onLogicalOr) func (left, right: Expression) -> BinaryOp {
+        null
         //BinaryOp new(left, right, OpType or, token())
     }
 
     onLogicalAnd: unmangled(onLogicalAnd) func (left, right: Expression) -> BinaryOp {
+        null
         //BinaryOp new(left, right, OpType and, token())
     }
 
     onBinaryOr: unmangled(onBinaryOr) func (left, right: Expression) -> BinaryOp {
+        null
         //BinaryOp new(left, right, OpType bOr, token())
     }
 
     onBinaryXor: unmangled(onBinaryXor) func (left, right: Expression) -> BinaryOp {
+        null
         //BinaryOp new(left, right, OpType bXor, token())
     }
 
     onBinaryAnd: unmangled(onBinaryAnd) func (left, right: Expression) -> BinaryOp {
+        null
         //BinaryOp new(left, right, OpType bAnd, token())
     }
 
     onLogicalNot: unmangled(onLogicalNot) func (inner: Expression) -> UnaryOp {
+        null
         //UnaryOp new(inner, UnaryOpType logicalNot, token())
     }
 
     onBinaryNot: unmangled(onBinaryNot) func (inner: Expression) -> UnaryOp {
+        null
         //UnaryOp new(inner, UnaryOpType binaryNot, token())
     }
 
     onUnaryMinus: unmangled(onUnaryMinus) func (inner: Expression) -> UnaryOp {
+        null
         //UnaryOp new(inner, UnaryOpType unaryMinus, token())
     }
 
     onParenthesis: unmangled(onParenthesis) func (inner: Expression) -> Parenthesis {
+        null
         //Parenthesis new(inner, token())
     }
 
     onAddressOf: unmangled(onAddressOf) func (inner: Expression) -> AddressOf {
+        null
         //AddressOf new(inner, inner token)
     }
 
     onDereference: unmangled(onDereference) func (inner: Expression) -> Dereference {
+        null
         //Dereference new(inner, token())
     }
-
-    token: func -> Token {
-        Token new(tokenPos[0], tokenPos[1], module)
-    }
-
-    peek: func <T> (T: Class) -> T {
-        node := stack peek() as Node
-        if(!node instanceOf?(T)) {
-            params errorHandler onError(InternalError new(token(), "Should've peek'd a %s, but peek'd a %s. Stack = %s" format(T name, node class name, stackRepr())))
-        }
-        return node
-    }
-
-    pop: func <T> (T: Class) -> T {
-        node := stack pop() as Node
-        if(!node instanceOf?(T)) {
-            params errorHandler onError(InternalError new(token(), "Should've pop'd a %s, but pop'd a %s. Stack = %s" format(T name, node class name, stackRepr())))
-        }
-        return node
-    }
-
-    stackRepr: func -> String {
-        sb := Buffer new()
-        for(e in stack) {
-            sb append(e class name). append(", ")
-        }
-        sb toString()
-    }
-
 }
 
 // position in stream handling
@@ -632,10 +705,7 @@ trailingQuest: unmangled func (string: CString) -> CString           { (string t
 trailingBang:  unmangled func (string: CString) -> CString           { (string toString() + "__bang")  toCString() }
 error: unmangled func (this: AstBuilder, errorID: Int, message: CString, index: Int) {
     msg : String = (message == null) ? null : message toString()
-    this error(errorID, msg, index)
-}
-
-SyntaxError: class extends Error {
-    init: super func ~tokenMessage
+    msg println()
+    //this error(errorID, msg, index)
 }
 
