@@ -340,7 +340,6 @@ FunctionDeclBody = (
                 - t:Type ~{ error(core->this, EXP_RET_TYPE, "Missing return type.\n", G->pos + G->offset) }
                           { onFunctionReturnType(core->this, t) }
             )?
-            - IS_KW
             - EOL
             # body is optional (for abstract/extern-named functions)
             (
@@ -692,7 +691,6 @@ RETURN_KW    = "Γύρνα"
 END_KW       = "Τέλος"
 
 FUNC_KW      = "Συνάρτηση"
-IS_KW        = "είναι"
 STRUCT_KW    = "Δομή"
 EXTERN_KW    = "εξωτερική"
 UNMANGLED_KW = "unmangled"
@@ -716,7 +714,7 @@ NULL_KW      = "null"
 KW           = BREAK_KW | CONTINUE_KW | RETURN_KW | FUNC_KW
              | STRUCT_KW | EXTERN_KW | UNMANGLED_KW | IMPORT_KW
              | IF_KW | ELSE_KW | FOR_KW | WHILE_KW | AS_KW
-             | NULL_KW | END_KW | THEN_KW | IS_KW
+             | NULL_KW | END_KW | THEN_KW
 
 DOT          = !DOUBLE_DOT '.'
 COLON        = ':'
