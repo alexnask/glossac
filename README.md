@@ -15,4 +15,4 @@ Tools used:<br/>
 Ο μεταγλωτιστής αυτός μεταγλωτίζει μία γλώσσα παρόμοια με την "γλώσσα" που διδάσκεται στο μάθημα κατεύθηνσης της τεχνολογικής στην τρίτη Λυκείου σε C99, ενω διαθέτει ικανότητες interfacing με την C. Για να τρέξετε τον μεταγλωτιστή, θα χρειαστήτε τα παρακάτω εργαλεία:<br/>
 [nddrylliog/greg](https://github.com/nddrylliog/greg) (recursive-descent parser generator)<br/>
 [nddrylliog/rock](https://github.com/nddrylliog/rock) (ooc compiler writen in ooc)<br/>
-[Boehm GC](http://www.hpl.hp.com/personal/Hans_Boehm/gc/) (Garbage collector for the C programming language)s
+[Boehm GC](http://www.hpl.hp.com/personal/Hans_Boehm/gc/) (Garbage collector for the C programming language)

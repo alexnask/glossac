@@ -488,8 +488,8 @@ Block   = (
 
 If      = (
           IF_KW { tokenPos; }
-          - WS e:Expr WS       { onIfStart(core->this, e); }
-          - THEN_KW WS
+          - e:Expr      { onIfStart(core->this, e); }
+          - THEN_KW
           - EOL
           - Body
           - END_KW
@@ -622,8 +622,8 @@ Access =  ((ident:IDENT_CORE { tokenPos; } '&' ![&=] - { core->token[1] += 1; $$
                    (',' WS index:Expr - { onStatement(core->this, index); })*
                     - ']' - { $$=l=onArrayAccessEnd(core->this); }
                  )
+                | '.' r:IDENT_CORE { tokenPos; $$=l=onVarAccess(core->this, l, r); }
                 | - call:FunctionCall                   { onFunctionCallExpr(core->this, call, l); $$=l=call; }
-                | - '.' r:IDENT_CORE { tokenPos; $$=l=onVarAccess(core->this, l, r); }
                 | - AS_KW { tokenPos; } -  r:Type       { $$=l=onCast(core->this, l, r); }
                 | '&' ![&=] - &([ \t\r\n;,)}] | ']')    { core->token[1] += 1; $$=l=onAddressOf(core->this, l); }
                 | '@'                                    { $$=l=onDereference(core->this, l); }
@@ -633,29 +633,17 @@ FunctionCall = callName:IDENT { tokenPos; onFunctionCallStart(core->this, callNa
                FunctionCallCore { $$=onFunctionCallEnd(core->this); }
 
 FunctionCallCore =
-               WS
+           '(' WS
 	       (
-                ( e:Expr { tokenPos; onFunctionCallArg(core->this, e); }
-                | a:ACS  { tokenPos; onFunctionCallArg(core->this, a); })
+	            
+               e:Expr { tokenPos; onFunctionCallArg(core->this, e); }
                (WS
                ','
                WS
-                ( e:Expr { tokenPos; onFunctionCallArg(core->this, e); }
-                | a:ACS  { tokenPos; onFunctionCallArg(core->this, a); })
+                e:Expr { tokenPos; onFunctionCallArg(core->this, e); }
                )*
-               )?
-               WS
-
-ACS = (
-        { tokenPos; onFunctionStart(core->this, ""); onFunctionArgsStart(core->this); }
-        '|' WS?
-        ( i:IDENT { tokenPos; onVarDeclStart(core->this); onVarDeclName(core->this, i); onStatement(core->this, onVarDeclEnd(core->this));  }
-          (WS ',' WS)?
-        )*
-        '|' WS { onFunctionArgsEnd(core->this); }
-        (s:Stmt { onStatement(core->this, s); })*
-        { tokenPos; $$=onFunctionEnd(core->this); }
-)
+           )?
+           WS CLOS_PAREN ~{ rewindWhiteSpace; error(core->this, EXP_CLOSING_PAREN, "Expected closing parenthesis to finish the function call!\n", G->pos + G->offset) }
 
 
 VariableAccess = i:IDENT_CORE

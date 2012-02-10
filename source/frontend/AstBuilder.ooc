@@ -23,7 +23,7 @@ computeReservedHashs: func (words: String[]) -> ArrayList<Int> {
 }
 */
 
-Expression: class {}
+Expression: class { name: String; init: func(=name) }
 Type: class {}
 TypeList: class {}
 FuncType: class extends Type {}
@@ -430,8 +430,8 @@ AstBuilder: class {
     }
 
     // variable access
-    onVarAccess: unmangled(onVarAccess) func (expr: Expression, name: CString) -> VariableAccess {
-        null
+    onVarAccess: unmangled(onVarAccess) func (expr: Expression, name: CString) -> Expression {
+        Expression new(name toString())
         //return VariableAccess new(expr, name toString(), token())
     }
 
