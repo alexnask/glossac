@@ -39,22 +39,30 @@ FunctionCall: class extends Expression {
     // Because glossa is not a polymorphic language, the matching is relatively simple
     // We do not use a scoring system and do not keep the call's expected return type it was inferred to but rather only the arguments
     // If the argument types of the call match those of the definition then we know this is the right definition
-    // Note that we dereference the argument types of the declaration before comparing them to the expressions' types wich we also dereference
+    // Note that we depointerize the argument types of the declaration before comparing them to the expressions' types wich we also depointerize
     // In this implementation of glossa it is valid to pass an argument to a function whithout implicitely referencing it, letting the compiler do that
     // so we compare the root types. We then add the correct amount of referencing or dereferencing to the passed argument
-    // TODO: add the correct amount of referencing or dereferencing to the passed argument using the `Expression pointerize` and `Type refLevel` methods
+    // We use trimPointers because we dont want to dereference them arrays. For example if we have a function with an argument of type
+    // int[]*[]**
+    // And we try to pass an expression of type 
+    // int[]****
+    // We would not be able to. In the countrary, we would succeed with an expression of type
+    // int[]*[]*** or int[]*[]
+    // TODO: add the correct amount of referencing or dereferencing to the passed argument using the `Expression pointerize` and `Type pointerLevel` methods
     matches?: func(fd: FunctionDecl) -> Bool {
         if(!fd) return false
         // Varargs should only be the last argument type of a function
         if(fd arguments last() type instanceOf?(VarArgType)) {
             if(args getSize() < fd arguments getSize() - 1) return false
             for(i in 0 .. fd arguments getSize() - 1) {
-                if(fd arguments get(i) type dereference() != args get(i) getType() dereference()) return false
+                if(fd arguments get(i) type trimPointers() != args get(i) getType() trimPointers()) return false
+                args[i] = args get(i) pointerize(fd arguments get(i) type pointerLevel() - args get(i) getType() pointerLevel())
             }
             return true
         } else if(args getSize() != fd arguments getSize()) return false
         for(i in 0 .. fd arguments getSize()) {
-            if(fd arguments get(i) type dereference() != args get(i) getType() dereference()) return false
+            if(fd arguments get(i) type trimPointers() != args get(i) getType() trimPointers()) return false
+            args[i] = args get(i) pointerize(fd arguments get(i) type pointerLevel() - args get(i) getType() pointerLevel())
         }
         true
     }

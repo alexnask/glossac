@@ -7,11 +7,15 @@
 
 Δομή test
     a: int
+    b: void*
 Τέλος
 
-Συνάρτηση β (arg: test) -> int
+Συνάρτηση β (arg: test[]) -> int
     arg.a
 Τέλος
 
 Συνάρτηση other
+Τέλος
+
+Δομή void εξωτερική
 Τέλος

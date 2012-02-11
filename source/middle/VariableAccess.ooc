@@ -27,6 +27,7 @@ VariableAccess: class extends Expression {
             // Note the derenference call. We find the fields of the naked type and then we will dereference the expression to the naked type.
             suggestedStruct := resolver findStructDecl(expr getType() dereference() name)
             if(!suggestedStruct) resolver fail("Cannot resolve type of expression " + expr toString(), token)
+            else if(expr getType() pointerLevel() != expr getType() refLevel()) resolver fail("Cannot access field of array type " + expr getType() toString(), token)
             
             suggestedStruct fields each(|field|
                 if(field name == name) {

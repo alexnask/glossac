@@ -10,10 +10,24 @@ Type: class extends Statement {
     _void := static This new("void", nullToken) // Void type wich is the default return type of a function
     
     pointer?: func -> Bool {
-        instanceOf?(PointerType)
+        instanceOf?(PointerType) && !instanceOf?(ArrayType)
+    }
+    
+    array?: func -> Bool {
+        instanceOf?(ArrayType)
     }
     
     refLevel: func -> SSizeT { // Function that returns the level of the pointerization of the type
+        level := 0
+        type := clone()
+        while(type pointer?() || type array?()) {
+            level += 1
+            type = type as PointerType baseType
+        }
+        level
+    }
+    
+    pointerLevel: func -> SSizeT {
         level := 0
         type := clone()
         while(type pointer?()) {
@@ -24,6 +38,14 @@ Type: class extends Statement {
     }
     
     dereference: func -> Type {
+        type := clone()
+        while(type pointer?() || type array?()) {
+            type = type as PointerType baseType
+        }
+        type
+    }
+    
+    trimPointers: func -> Type {
         type := clone()
         while(type pointer?()) {
             type = type as PointerType baseType

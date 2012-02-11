@@ -52,7 +52,7 @@ Resolver: class {
         null
     }
     
-    // This function tries tofind a structure declaration based on a type name in the current resolver's trail
+    // This function tries to find a structure declaration based on a type name in the current resolver's trail
     findStructDecl: func(name: String) -> StructDecl {
         iter := parents backIterator()
         while(iter hasPrev?()) {
