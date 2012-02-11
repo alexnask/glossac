@@ -12,7 +12,8 @@ Module: class extends Node {
     uses := ArrayList<Use> new()
     
     resolve: func(resolver: Resolver) {
-        
+        // TODO: resolve imports and uses
+        resolver push(this)
         for(struct in structures) {
             if(struct resolved?) continue
             struct resolve(resolver)
@@ -25,7 +26,7 @@ Module: class extends Node {
             if(fn resolved?) continue
             fn resolve(resolver)
         }
-
+        resolver pop(this)
         resolved? = true
     }
     

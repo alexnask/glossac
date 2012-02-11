@@ -1,12 +1,10 @@
 import structs/ArrayList
-import Node,Resolver,Type,Scope
+import Node,Resolver,Type,Scope,Decl
 
-FunctionDecl: class extends Expression {
+FunctionDecl: class extends Decl {
     name: String
-    returnType: Type
+    returnType := Type void
     arguments := ArrayList<VariableDecl> new()
-    externName: String // null -> not extern, "" -> extern with default name
-    unmangledName: String // null -> not unmangled, "" -> unmangled with default name
     body := Scope new()
 
     init: func(=name,=token)
@@ -27,21 +25,33 @@ FunctionDecl: class extends Expression {
         resolved? = true
         resolver pop(this)
     }
-
-    extern?: func -> Bool {
-        externName != null
-    }
-    unmangled?: func -> Bool {
-        unamgledNmae != null
-    }
     
     clone: func -> This {
         c := FunctionDecl new(name,token)
         c returnType = returnType
-        c arguments = arguments
+        arguments each(|arg|
+            c arguments add(arg clone())
+        )
         c externName = externName
         c unmangledName = unmangledName
         c body = body
         c
+    }
+    
+    toString: func -> String {
+        ret := "Συνάρτηση "
+        ret += name + " "
+        if(extern?()) ret += "εξωτερική(" + externName + ") "
+        if(unmangled?()) ret += "unmangled(" + unmangledName + ") "
+        ret += "("
+        for(arg in arguments) {
+            ret += arg toString()
+            if(arguments indexOf(arg) != arguments size() - 1) {
+                ret += ", "
+            }
+        }
+        ret += ") -> "
+        ret += returnType toString()
+        ret
     }
 }
