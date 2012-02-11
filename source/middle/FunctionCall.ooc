@@ -17,6 +17,8 @@ FunctionCall: class extends Expression {
     }
 
     resolve: func(resolver: Resolver) {
+        if(resolved?) return
+
         resolver push(this)
         // Resolve argument expressions
         args each(|arg|

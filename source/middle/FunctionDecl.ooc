@@ -10,16 +10,16 @@ FunctionDecl: class extends Decl {
     init: func(=name,=token)
 
     resolve: func(resolver: Resolver) {
+        if(resolved?) return
+        
         resolver push(this)
         if(returnType) {
             if(!returnType resolved?) returnType resolve(resolver)
         }
         for(argument in arguments) {
-            if(argument resolved?) continue
             argument resolve(resolver)
         }
         for(stmt in body) {
-            if(stmt resolved?) continue
             stmt resolve(resolver)
         }
         resolved? = true
@@ -44,11 +44,11 @@ FunctionDecl: class extends Decl {
         if(extern?()) ret += "εξωτερική(" + externName + ") "
         if(unmangled?()) ret += "unmangled(" + unmangledName + ") "
         ret += "("
+        isFirst := true
         for(arg in arguments) {
+            if(isFirst) isFirst = false
+            else ret += ", "
             ret += arg toString()
-            if(arguments indexOf(arg) != arguments size() - 1) {
-                ret += ", "
-            }
         }
         ret += ") -> "
         ret += returnType toString()

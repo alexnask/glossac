@@ -1,7 +1,7 @@
 import ../frontend/Token
 import Expression
 
-Decl: class extends Expression {
+Decl: abstract class extends Expression {
     init: super func(token: Token)
     
     externName: String // null -> not extern, "" -> extern with default name

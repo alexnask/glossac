@@ -12,26 +12,20 @@ Module: class extends Node {
     uses := ArrayList<Use> new()
     
     resolve: func(resolver: Resolver) {
+        if(resolved?) return
         // TODO: resolve imports and uses
         resolver push(this)
         for(struct in structures) {
-            if(struct resolved?) continue
             struct resolve(resolver)
         }
         for(var in variables) {
-            if(var resolved?) continue
             var resolve(resolver)
         }
         for(fn in functions) {
-            if(fn resolved?) continue
             fn resolve(resolver)
         }
         resolver pop(this)
         resolved? = true
-    }
-    
-    resolveCall: func(call: FunctionCall, resolver: Resolver) {
-        
     }
     
     addUse: func(_use: Use) {
@@ -51,7 +45,7 @@ Module: class extends Node {
     }
     
     toString: func -> String {
-        "Module with path:" + path
+        "Module[" + path + "]"
     }
     
     clone: func -> This {

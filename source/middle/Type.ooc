@@ -3,6 +3,7 @@ import structs/ArrayList
 
 Type: class extends Expression {
     name: String
+    ref: StructDecl = null // The structure the type was defined in
     init: func(=name,=token)
     
     void := static This("void") // Void type wich is the default return type of a function
@@ -16,6 +17,7 @@ Type: class extends Expression {
         while(type pointer?()) {
             type = type as PointerType baseType
         }
+        type
     }
     
     toString: func -> String {
@@ -27,12 +29,24 @@ Type: class extends Expression {
     }
     
     resolve: func(resolver: Resolver) {
-        
+        // Nothing will change in the type itself after resolving. However, in glossa all types (but function types and the vararg type) are defined through structures, even "base" types like void, int, float, etc..
+        // So resolving is just a metter of finding a structure declarataion that matches the type's name
+        // This is done in the rather anorthodox way glossac uses, through the resolver
+        resolver push(this)
+        suggested := resolver findStructDecl(name)
+        if(suggested) ref = suggested
+        else resolver fail("Could not resolve type " + name, token)
+        resolver pop(this)
+        resolved? = true
     }
 }
 
 VarArgType: class extends Type {
     init: func { super("...") }
+    
+    resolve: func(resolver: Resolver) {
+        resolved? = true // No need tor esolve anything, baby :D
+    }
 }
 
 PointerType: class extends Type {
@@ -42,6 +56,10 @@ PointerType: class extends Type {
         PointerType new(baseType clone())
     }
     
+    resolve: func(resolver: Resolver) {
+        baseType resolve(resolver)
+        resolved? = true
+    }
     
     toString: func -> String {
         baseType toString() + "*"
@@ -49,11 +67,12 @@ PointerType: class extends Type {
 }
 
 ArrayType: class extends PointerType {
-    baseType: Type
-    init: func(=baseType) { token = baseType token }
+    init: super func(type: Type)
     clone: func -> This {
         ArrayType new(baseType clone())
     }
+    
+    resolve: super func(resolver: Resolver)
     
     toString: func -> String {
         baseType toString() + "[]"
@@ -62,7 +81,7 @@ ArrayType: class extends PointerType {
 
 FuncType: class extends Type {
     argumentTypes := ArrayList<Type> new()
-    returnType: Type = null
+    returnType := Type void
     init: func
     
     addArgument: func(type: Type) {
@@ -78,13 +97,23 @@ FuncType: class extends Type {
         c
     }
     
+    resolve: func(resolver: Resolver) {
+        // To resolve a function type, we need to reselve eevry argument's type and its return type
+        // TODO: sould i push to the resolver here?
+        argumentTypes each(|arg|
+            arg resolve(resolver)
+        )
+        returnType resolve(resolver)
+        resolved? = true
+    }
+    
     toString: func -> String {
         ret := "Συνάρτηση ("
+        isFirst := true
         for(arg in argumentTypes) {
+            if(isFirst) isFirst = false
+            else ret += ", "
             ret += arg toString()
-            if(argumentTypes indexOf?(arg) != argumentTypes size() - 1) {
-                ret += ", "
-            }
         }
         ret += ")"
         if(returnType) ret += " -> " + returnType toString()

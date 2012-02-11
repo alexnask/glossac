@@ -1,6 +1,6 @@
 import structs/Stack
 import ../frontend/Token
-import Module,FunctionDecl
+import Module,FunctionDecl,StructureDecl,VariableDecl
 
 Resolver: class {
     parents := Stack<Node> new()
@@ -20,12 +20,14 @@ Resolver: class {
                 )
                 // Too naive?
                 if(found) return found
+            } else if(node instanceOf?(FunctionDecl)) { // Or is it a case of recursion?
+                if(node as FunctionDecl name == name) return node as FunctionDecl
             }
         }
         null
     }
 
-    // This function tries to find a varaible declaration based on it's name in the current resolver's trail
+    // This function tries to find a variable declaration based on it's name in the current resolver's trail
     findVariableDecl: func(name: String) -> VariableDecl {
         iter := parents backIterator()
         while(iter hasPrev?()) {
@@ -39,6 +41,24 @@ Resolver: class {
             } else if(node instanceOf?(Scope)) { // Local variable
                 found := node as Scope variable(name)
                 if(found) return found
+            }
+        }
+        null
+    }
+    
+    // This function tries tofind a structure declaration based on a type name in the current resolver's trail
+    findStructDecl: func(name: String) -> StructDecl {
+        iter := parents backIterator()
+        while(iter hasPrev?()) {
+            node := iter prev()
+            if(node instanceOf?(Module)) { // Structures can only be defined in the module's core
+                found: StructDecl = null
+                node as Module structures each(|decl|
+                    if(decl name == name) found = decl
+                )
+                if(found) return found
+            } else if(node instanceOf?(StructDecl)) { // Or is it type recursion?
+                if(node as StructDecl name == name) return node as StructDecl
             }
         }
         null

@@ -5,6 +5,8 @@ Scope: class extends Statement {
     list := ArrayList<Statement> new()
     
     resolve: func(resolver: Resolver) {
+        if(resolved?) return
+
         resolver push(this)
         list each(|elem|
             elem resolve(resolver)
@@ -20,5 +22,17 @@ Scope: class extends Statement {
             }
         }
         null
+    }
+    
+    toString: func -> String {
+        ret := "{ "
+        isFirst := true
+        for(stmt in list) {
+            if(isFirst) isFirst = false
+            else ret += ", "
+            ret += stmt toString()
+        }
+        ret += " }"
+        ret
     }
 }
