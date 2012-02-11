@@ -72,7 +72,11 @@ AstBuilder: class {
     module: Module
     
     init: func(path: String) {
-        parse(this, path toCString())
+        // This is really shitty right now
+        // but basically we will here convert relative paths to absolute before creating the module
+        module = Module new(path)
+        stack = Stack<Object> new()
+        parse(this, module path toCString())
     }
 
     onUse: unmangled(onUse) func (name: CString) {
