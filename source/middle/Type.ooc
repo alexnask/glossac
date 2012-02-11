@@ -1,12 +1,13 @@
 import Expression,FunctionDecl
+import ../frontend/Token
 import structs/ArrayList
 
-Type: class extends Expression {
+Type: class extends Statement {
     name: String
     ref: StructDecl = null // The structure the type was defined in
     init: func(=name,=token)
     
-    void := static This("void") // Void type wich is the default return type of a function
+    void := static This("void", Token _null) // Void type wich is the default return type of a function
     
     pointer?: func -> Bool {
         instanceOf?(PointerType)

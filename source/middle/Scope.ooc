@@ -1,7 +1,7 @@
 import structs/ArrayList
 import Statement,Resolver,VariableDecl
 
-Scope: class extends Statement {
+Scope: class extends Node {
     list := ArrayList<Statement> new()
     
     resolve: func(resolver: Resolver) {

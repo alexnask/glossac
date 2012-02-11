@@ -20,9 +20,18 @@ VariableDecl: class extends Decl {
 
         resolver push(this)
         type resolve(resolver)
-        if(expr) expr resolve(resolver)
+        if(expr) {
+            expr resolve(resolver)
+            if(expr getType() != type) {
+                resolver fail("Type mismatch, expected " + type toString() + " got " + expr getType() toString(), token)
+            }
+        }
         resolver pop(this)
         resolved? = true
+    }
+    
+    getType: func -> Type {
+        type
     }
     
     toString: func -> String {

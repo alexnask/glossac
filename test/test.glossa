@@ -1,7 +1,11 @@
 Χρήση woot
 Εισήγαγε path/[one,two]
 
-Δομή test εξωτερική(foobar)
+// Note that all types are declared as structures, even those wich are really not in C.
+Δομή int εξωτερική
+Τέλος
+
+Δομή test
     a: int
 Τέλος
 

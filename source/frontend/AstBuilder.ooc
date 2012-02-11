@@ -1,5 +1,7 @@
 import io/File, text/[EscapeSequence]
 import structs/[ArrayList, List, Stack, HashMap]
+import ../middle/[Module,Expression,FunctionCall,FunctionDecl,Statement,StatementDecl,Type,VariableAccess,VariableDecl,Node,Scope]
+import Token
 
 parse: extern proto func (AstBuilder, CString) -> Int
 
@@ -22,12 +24,6 @@ computeReservedHashs: func (words: String[]) -> ArrayList<Int> {
     list
 }
 */
-Expression: class {}
-Type: class {}
-TypeList: class {}
-FuncType: class extends Type {}
-FunctionDecl: class {}
-FunctionCall: class {}
 
 StringLiteral: class {}
 IntLiteral: class {}
@@ -37,10 +33,8 @@ BoolLiteral: class {}
 NullLiteral: class {}
 RangeLiteral: class {}
 
-Statement: class {}
 ArrayAccess: class {}
 Return: class {}
-VariableAccess: class {}
 Cast: class {}
 Block: class {}
 
@@ -75,6 +69,7 @@ AstBuilder: class {
 
     stack: Stack<Object>
     tokenPos : Int*
+    module: Module
     
     init: func(path: String) {
         parse(this, path toCString())
@@ -700,6 +695,10 @@ AstBuilder: class {
     onDereference: unmangled(onDereference) func (inner: Expression) -> Dereference {
         null
         //Dereference new(inner, token())
+    }
+    
+    token: func -> Token {
+        Token new(tokenPos[0], tokenPos[1], module)
     }
 }
 

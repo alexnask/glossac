@@ -54,4 +54,13 @@ FunctionDecl: class extends Decl {
         ret += returnType toString()
         ret
     }
+    
+    getType: func -> Type {
+        ftype := FuncType new()
+        arguments each(|arg|
+            ftype argumentTypes add(arg type)
+        )
+        ftype returnType = returnType
+        ftype
+    }
 }
