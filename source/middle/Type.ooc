@@ -12,6 +12,16 @@ Type: class extends Expression {
         instanceOf?(PointerType)
     }
     
+    refLevel: func -> SSizeT { // Function that returns the level of the pointerization of the type
+        level := 0
+        type := clone()
+        while(type pointer?()) {
+            level += 1
+            type = type as PointerType baseType
+        }
+        level
+    }
+    
     dereference: func -> Type {
         type := clone()
         while(type pointer?()) {
@@ -45,7 +55,7 @@ VarArgType: class extends Type {
     init: func { super("...") }
     
     resolve: func(resolver: Resolver) {
-        resolved? = true // No need tor esolve anything, baby :D
+        resolved? = true // No need to resolve anything, baby :D
     }
 }
 
@@ -98,7 +108,7 @@ FuncType: class extends Type {
     }
     
     resolve: func(resolver: Resolver) {
-        // To resolve a function type, we need to reselve eevry argument's type and its return type
+        // To resolve a function type, we need to resolve evrey argument's type and its return type
         // TODO: sould i push to the resolver here?
         argumentTypes each(|arg|
             arg resolve(resolver)

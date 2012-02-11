@@ -10,6 +10,8 @@ FunctionCall: class extends Expression {
     init: func(=name, =token)
     clone: func -> This {
         c := FunctionCall new(name,token)
+        c externName = externName
+        c unmangledName = unmangledName
         args each(|arg|
             c args add(arg clone())
         )
@@ -39,18 +41,22 @@ FunctionCall: class extends Expression {
     // Because glossa is not a polymorphic language, the matching is relatively simple
     // We do not use a scoring system and do not keep the call's expected return type it was inferred to but rather only the arguments
     // If the argument types of the call match those of the definition then we know this is the right definition
+    // Note that we dereference the argument types of the declaration before comparing them to the expressions' types wich we also dereference
+    // In this implementation of glossa it is valid to pass an argument to a function whithout implicitely referencing it, letting the compiler do that
+    // so we compare the root types. We then add the correct amount of referencing or dereferencing to the passed argument
+    // TODO: add the correct amount of referencing or dereferencing to the passed argument using the `Expression pointerize` and `Type refLevel` methods
     matches?: func(fd: FunctionDecl) -> Bool {
         if(!fd) return false
         // Varargs should only be the last argument type of a function
         if(fd arguments get(-1) type instanceOf?(VarArgType)) {
             if(args size() < fd arguments size() - 1) return false
             for(i in 0 .. fd arguments size() - 1) {
-                if(fd arguments get(i) type != args get(i) getType()) return false
+                if(fd arguments get(i) type dereference() != args get(i) getType() dereference()) return false
             }
             return true
         } else if(args size() != fd arguments size()) return false
         for(i in 0 .. fd arguments size()) {
-            if(fd arguments get(i) type != args get(i) getType()) return false
+            if(fd arguments get(i) type dereference() != args get(i) getType() dereference()) return false
         }
         true
     }

@@ -14,6 +14,19 @@ VariableDecl: class extends Decl {
         c unmangledName = unmangledName
         c
     }
-}
+    
+    resolve: func(resolver: Resolver) {
+        if(resolved?) return
 
+        resolver push(this)
+        type resolve(resolver)
+        if(expr) expr resolve(resolver)
+        resolver pop(this)
+        resolved? = true
+    }
+    
+    toString: func -> String {
+        name + ": " + type toString() + ((expr) ? " <- " + expr toString() : "")
+    }
+}
 
