@@ -5,7 +5,7 @@
     a: int
 Τέλος
 
-Συνάρτηση β arg: test -> int
+Συνάρτηση β (arg: test) -> int
     Αν arg.a >= 42 τότε
         Show (arg.a - 42)
     Τέλος

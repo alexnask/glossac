@@ -328,9 +328,11 @@ FunctionDecl =
 FunctionDeclBody = (
             # arguments are optional
             (
+                - '(' { onFunctionArgsStart(core->this) }
                 (   WS Argument WS
                     (',' WS Argument WS)*
                 )?
+                - CLOS_PAREN ~{ error(core->this, EXP_ARG, "Malformed function argument (remember, it's `name: Type` in ooc, not `Type name`)\n", G->pos + G->offset) }
                               { onFunctionArgsEnd(core->this) }
             )?
 
@@ -432,19 +434,12 @@ TypeBase = FuncType |
             rest:IDENT { strcat(core->typeBuffer, rest); }
           > { $$=onTypeNew(core->this, core->typeBuffer); })
 
-Type    = list:TypeList { $$=list; } | (
+Type    = (
           t:TypeBase
           - (STAR { t=$$=onTypePointer  (core->this, t); }
           | "[" WS { inner=NULL; } - inner:Expr? "]" { t=$$=onTypeBrackets(core->this, t, inner); }
           )*
           - { $$=t; })
-
-TypeListCore = { $$=onTypeList(core->this); }
-TypeList = '(' WS list:TypeListCore
-                      elem:Type { onTypeListElement(core->this, list, elem) }
-           (WS ',' WS elem:Type { onTypeListElement(core->this, list, elem) })*
-           ')' -
-           { $$=list; }
 
 FuncTypeCore = "Συνάρτηση" &[^A-Za-z0-9_] { tokenPos; $$=onFuncTypeNew(core->this); }
 

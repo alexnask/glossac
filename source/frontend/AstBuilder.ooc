@@ -22,8 +22,7 @@ computeReservedHashs: func (words: String[]) -> ArrayList<Int> {
     list
 }
 */
-
-Expression: class { name: String; init: func(=name) }
+Expression: class {}
 Type: class {}
 TypeList: class {}
 FuncType: class extends Type {}
@@ -59,6 +58,18 @@ Parenthesis: class {}
 AddressOf: class {}
 Dereference: class {}
 
+// Basically we push stuff in the stack and modify the stacks last object with the called events.
+// At the end, the stack should contain only Modules (?)
+// Then, we resolve the modules in order, adding the symbols resolved to them. When a module asks for a symbol we first look in the module itself, the in the modules previously resolved. (From the smaller scope to the largest)
+// Then, we go through each module and call the backend
+
+// So we push the Module
+// Here is a struct decl, we push it to stack
+// Here is a variable decl, we push it to the struct decl
+// Oh noes, onStatement() is called on the struct decl
+// We pop it and we see the top of the stack is a module
+// So we add it to the module's structure declarations
+// etc...
 
 AstBuilder: class {
 
@@ -431,7 +442,7 @@ AstBuilder: class {
 
     // variable access
     onVarAccess: unmangled(onVarAccess) func (expr: Expression, name: CString) -> Expression {
-        Expression new(name toString())
+        null
         //return VariableAccess new(expr, name toString(), token())
     }
 
