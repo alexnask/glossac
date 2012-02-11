@@ -1,6 +1,6 @@
 import structs/Stack
 import ../frontend/Token
-import Module,FunctionDecl,StructDecl,VariableDecl,Node,Scope
+import Module,FunctionDecl,StructDecl,VariableDecl,Node,Scope,Type
 
 Resolver: class {
     parents := Stack<Node> new()

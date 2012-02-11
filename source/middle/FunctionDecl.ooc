@@ -3,7 +3,7 @@ import Node,Resolver,Type,Scope,Decl,VariableDecl
 
 FunctionDecl: class extends Decl {
     name: String
-    returnType: Type = Type void
+    returnType := Type _void
     arguments := ArrayList<VariableDecl> new()
     body: Scope = null // null: no body, not null: body
 

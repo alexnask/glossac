@@ -7,7 +7,7 @@ Type: class extends Statement {
     ref: StructDecl = null // The structure the type was defined in
     init: func(=name,=token)
     
-    void := static This new("void", Token _null) // Void type wich is the default return type of a function
+    _void := static This new("void", Token _null) // Void type wich is the default return type of a function
     
     pointer?: func -> Bool {
         instanceOf?(PointerType)
@@ -53,7 +53,7 @@ Type: class extends Statement {
 }
 
 VarArgType: class extends Type {
-    init: func { super("...") }
+    init: func(token: Token) { super("...",token) }
     
     resolve: func(resolver: Resolver) {
         resolved? = true // No need to resolve anything, baby :D
@@ -103,7 +103,7 @@ ArrayType: class extends PointerType {
 
 FuncType: class extends Type {
     argumentTypes := ArrayList<Type> new()
-    returnType := Type void
+    returnType := Type _void
     init: func(=token)
     
     addArgument: func(type: Type) {

@@ -1,5 +1,5 @@
 import structs/ArrayList
-import Resolver,Expression,FunctionDecl,Type
+import Resolver,Expression,FunctionDecl,Type,VariableDecl
 
 FunctionCall: class extends Expression {
     name: String // Name of the function to be called

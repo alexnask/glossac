@@ -1,4 +1,4 @@
-import ../source/frontend/AstBuilder
+import source/frontend/AstBuilder
 
 astBuilder := AstBuilder new("test.glossa")
 

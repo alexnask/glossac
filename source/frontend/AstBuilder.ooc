@@ -218,7 +218,7 @@ AstBuilder: class {
     }
 
     onFuncTypeVarArg: unmangled(onFuncTypeVarArg) func (f: FuncType) {
-        f argumentTypes add(VarArgType new())
+        f argumentTypes add(VarArgType new(token()))
     }
 
     onFuncTypeReturnType: unmangled(onFuncTypeReturnType) func (f: FuncType, returnType: Type) {

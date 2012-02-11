@@ -16,8 +16,8 @@ Module: class extends Node {
         if(resolved?) return
         // TODO: resolve imports and uses
         resolver push(this)
-        for(struct in structures) {
-            struct resolve(resolver)
+        for(_struct in structures) {
+            _struct resolve(resolver)
         }
         for(var in variables) {
             var resolve(resolver)

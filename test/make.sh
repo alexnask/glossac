@@ -1,3 +1,4 @@
 #! /bin/bash
-
-rock test ../grammar/bin/grammatikh.o
+cp -r ../source source
+rock test ../grammar/bin/grammatikh.o --v
+rm -r source
