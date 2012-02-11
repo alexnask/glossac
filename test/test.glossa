@@ -10,11 +10,13 @@
     b: void*
 Τέλος
 
-Συνάρτηση β (arg: test[]) -> int
+Συνάρτηση β (arg: test*) -> int
     arg.a
 Τέλος
 
 Συνάρτηση other
+    arg1: test
+    arg1.b
 Τέλος
 
 Δομή void εξωτερική
