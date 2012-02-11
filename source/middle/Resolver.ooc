@@ -1,6 +1,6 @@
 import structs/Stack
 import ../frontend/Token
-import Module,FunctionDecl,StructDecl,VariableDecl,Node,Scope,Type
+import Module,FunctionDecl,StructDecl,VariableDecl,Node,Scope,Type,FunctionDecl
 
 Resolver: class {
     parents := Stack<Node> new()
@@ -41,6 +41,12 @@ Resolver: class {
             } else if(node instanceOf?(Scope)) { // Local variable
                 found := node as Scope variable(name)
                 if(found) return found
+            } else if(node instanceOf?(FunctionDecl)) { // Function argument
+                found: VariableDecl = null
+                node as FunctionDecl arguments each(|decl|
+                    if(decl name == name) found = decl
+                )
+                if(found) return found
             }
         }
         null
@@ -73,7 +79,7 @@ Resolver: class {
     }
 
     fail: func(msg: String, token: Token) {
-        Exception new("Resolver failed: " + msg + "\n At " + token toString()) throw()
+        Exception new("Resolver failed: " + msg + ((!token equals?(nullToken)) ? "\nAt " + token toString() : "")) throw()
     }
 }
 

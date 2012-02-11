@@ -4,7 +4,7 @@ import Node,FunctionDecl,StructDecl,VariableDecl,Resolver,FunctionCall
 
 Module: class extends Node {
     path: String
-    init: func(=path) { super(Token _null) }
+    init: func(=path) { super(nullToken) }
 
     functions := ArrayList<FunctionDecl> new()
     structures := ArrayList<StructDecl> new()
@@ -14,13 +14,10 @@ Module: class extends Node {
     
     resolve: func(resolver: Resolver) {
         if(resolved?) return
-        ("Resolving " + toString() + "...") println()
         // TODO: resolve imports and uses
         resolver push(this)
         for(_struct in structures) {
-            ("Resolving " + _struct toString() + "...") println()
             _struct resolve(resolver)
-            (_struct toString() + " done") println()
         }
         for(var in variables) {
             var resolve(resolver)
@@ -28,7 +25,6 @@ Module: class extends Node {
         for(fn in functions) {
             fn resolve(resolver)
         }
-        (toString() + " done") println()
         resolver pop(this)
         resolved? = true
     }

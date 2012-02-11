@@ -20,7 +20,10 @@ FunctionDecl: class extends Decl {
             argument resolve(resolver)
         }
         for(stmt in body list) {
-            stmt resolve(resolver)
+            // Normally we should not have null statements pop up
+            // But the AST building is not complete so we do
+            // TODO: remove if statement once the AST builder is complete
+            if(stmt) stmt resolve(resolver)
         }
         resolved? = true
         resolver pop(this)

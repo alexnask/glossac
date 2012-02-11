@@ -7,7 +7,7 @@ Type: class extends Statement {
     ref: StructDecl = null // The structure the type was defined in
     init: func(=name,=token)
     
-    _void := static This new("void", Token _null) // Void type wich is the default return type of a function
+    _void := static This new("void", nullToken) // Void type wich is the default return type of a function
     
     pointer?: func -> Bool {
         instanceOf?(PointerType)

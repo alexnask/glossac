@@ -2,13 +2,10 @@ import io/[FileReader, File]
 import ../middle/Module
 
 // Shamelessly copied that from rock D:
-
-/* Will go into the load method of Token */
-Token _null = Token new(0, 0, null)
+nullToken: Token
+nullToken = Token new(0, 0, null)
 
 Token: cover {
-    
-    _null: static This
     /** Start and length of a token, in bytes */
     start, length : SizeT
 

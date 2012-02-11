@@ -1,4 +1,5 @@
-import VariableDecl,Expression,Resolver,Type
+import VariableDecl,Expression,Resolver,Type,StructDecl
+import structs/ArrayList
 
 VariableAccess: class extends Expression {
     ref: VariableDecl = null
@@ -22,12 +23,18 @@ VariableAccess: class extends Expression {
             if(suggested) ref = suggested
             else resolver fail("Undefined reference to variable " + name, token)
         } else {
-            // Handle structure accessing
-            // Resolve left expression, get its type
-            // Get the structure declaration of the type
-            // Set ref to the variable declaration of the field with this name
-            // Profit.
+            expr resolve(resolver)
+            // Note the derenference call. We find the fields of the naked type and then we will dereference the expression to the naked type.
+            suggestedStruct := resolver findStructDecl(expr getType() dereference() name)
+            if(!suggestedStruct) resolver fail("Cannot resolve type of expression " + expr toString(), token)
             
+            suggestedStruct fields each(|field|
+                if(field name == name) {
+                    ref = field
+                }
+            )
+            if(!ref) resolver fail("Structure " + suggestedStruct type name + " has no field named " + name, token)
+            // TODO: dereference the expr
         }
         resolver pop(this)
     }
