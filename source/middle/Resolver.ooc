@@ -5,7 +5,7 @@ import Module,FunctionDecl,StructDecl,VariableDecl,Node,Scope,Type
 Resolver: class {
     parents := Stack<Node> new()
     init: func(parent: Module) {
-        parents push(parent)
+        parent resolve(this) // Module pushes itself in the resolver anyway
     }
 
     // This function tries to find a function declaration based on it's name in the current resolver's trail

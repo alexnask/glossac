@@ -76,6 +76,7 @@ AstBuilder: class {
         // but basically we will here convert relative paths to absolute before creating the module
         module = Module new(path)
         stack = Stack<Object> new()
+        stack push(module)
         parse(this, module path toCString())
     }
 
@@ -99,6 +100,10 @@ AstBuilder: class {
         structDecl := StructDecl new(name toString(),token())
         module addStructure(structDecl)
         stack push(structDecl)
+    }
+    
+    onStructExtern: unmangled(onStructExtern) func(name: CString) {
+        peek(StructDecl) externName = name toString()
     }
 
     onStructBody: unmangled(onStructBody) func {

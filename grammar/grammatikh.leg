@@ -109,6 +109,7 @@ void onUse(void *this, char *name);
 void onImport (void *this, char *path, char *name);
 
 void onStructStart(void *this, char *name);
+void onStructExtern(void *this, char *externName);
 void onStructBody(void *this);
 void onStructEnd(void *this);
 
@@ -358,7 +359,7 @@ StructDecl = (
             STRUCT_KW -
             structName:IDENT { tokenPos; onStructStart(core->this, structName) }
             # modifiers
-            (- ( ExternName
+            (- ( externName: ExternName { onStructExtern(core->this, externName) } # TODO: New StructExtern rule that allows for spaces, stars etc.
                 )
             )*
             - EOL
