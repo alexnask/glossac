@@ -1,11 +1,11 @@
 import structs/ArrayList
-import Node,Resolver,Type,Scope,Decl
+import Node,Resolver,Type,Scope,Decl,VariableDecl
 
 FunctionDecl: class extends Decl {
     name: String
-    returnType := Type void
+    returnType: Type = Type void
     arguments := ArrayList<VariableDecl> new()
-    body := Scope new()
+    body: Scope = null // null: no body, not null: body
 
     init: func(=name,=token)
 
@@ -14,12 +14,12 @@ FunctionDecl: class extends Decl {
         
         resolver push(this)
         if(returnType) {
-            if(!returnType resolved?) returnType resolve(resolver)
+            returnType resolve(resolver)
         }
         for(argument in arguments) {
             argument resolve(resolver)
         }
-        for(stmt in body) {
+        for(stmt in body list) {
             stmt resolve(resolver)
         }
         resolved? = true
@@ -30,7 +30,7 @@ FunctionDecl: class extends Decl {
         c := FunctionDecl new(name,token)
         c returnType = returnType
         arguments each(|arg|
-            c arguments add(arg clone())
+            c arguments add(arg as VariableDecl clone())
         )
         c externName = externName
         c unmangledName = unmangledName
@@ -41,8 +41,8 @@ FunctionDecl: class extends Decl {
     toString: func -> String {
         ret := "Συνάρτηση "
         ret += name + " "
-        if(extern?()) ret += "εξωτερική(" + externName + ") "
-        if(unmangled?()) ret += "unmangled(" + unmangledName + ") "
+        if(isextern?()) ret += "εξωτερική(" + externName + ") "
+        if(isunmangled?()) ret += "unmangled(" + unmangledName + ") "
         ret += "("
         isFirst := true
         for(arg in arguments) {
@@ -56,7 +56,7 @@ FunctionDecl: class extends Decl {
     }
     
     getType: func -> Type {
-        ftype := FuncType new()
+        ftype := FuncType new(token)
         arguments each(|arg|
             ftype argumentTypes add(arg type)
         )

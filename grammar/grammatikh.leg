@@ -124,10 +124,7 @@ void *onTypeAccess(void *this, void *type);
 
 void *onTypeNew(void *this, char *name);     // $$=onTypeNew(yytext)
 void *onTypePointer(void *this, void *type);   // $$=onTypePointer($$)
-void *onTypeReference(void *this, void *type); // $$=onTypeReference($$)
 void *onTypeBrackets(void *this, void *type, void *inner); // $$=onTypeBrackets($$, inner)
-void *onTypeList(void *this);
-void *onTypeListElement(void *this, void *list, void *elem);
 
 void *onFuncTypeNew(void *this);
 void onFuncTypeArgument(void *this, void *funcType, void *argType);
@@ -149,7 +146,6 @@ void onVarArg(void *this, char *name);
 void onFunctionCallStart(void *this, char *yytext);
 void onFunctionCallArg(void *this, void *expr);
 void *onFunctionCallEnd(void *this);
-void onFunctionCallExpr(void *this, void *call, void *expr);
 
 void *onStringLiteral(void *this, char *text);
 void *onCharLiteral(void *this, char *value);
@@ -618,7 +614,6 @@ Access =  ((ident:IDENT_CORE { tokenPos; } '&' ![&=] - { core->token[1] += 1; $$
                     - ']' - { $$=l=onArrayAccessEnd(core->this); }
                  )
                 | '.' r:IDENT_CORE { tokenPos; $$=l=onVarAccess(core->this, l, r); }
-                | - call:FunctionCall                   { onFunctionCallExpr(core->this, call, l); $$=l=call; }
                 | - AS_KW { tokenPos; } -  r:Type       { $$=l=onCast(core->this, l, r); }
                 | '&' ![&=] - &([ \t\r\n;,)}] | ']')    { core->token[1] += 1; $$=l=onAddressOf(core->this, l); }
                 | '@'                                    { $$=l=onDereference(core->this, l); }

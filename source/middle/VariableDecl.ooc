@@ -1,4 +1,4 @@
-import Expression,Decl,Resolver
+import Expression,Decl,Resolver,Type
 
 VariableDecl: class extends Decl {
     expr: Expression = null // This is the default expression of to be assigned to the variable once declared

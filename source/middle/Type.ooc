@@ -1,4 +1,4 @@
-import Expression,FunctionDecl
+import Expression,FunctionDecl,Statement,Resolver,StructDecl
 import ../frontend/Token
 import structs/ArrayList
 
@@ -7,7 +7,7 @@ Type: class extends Statement {
     ref: StructDecl = null // The structure the type was defined in
     init: func(=name,=token)
     
-    void := static This("void", Token _null) // Void type wich is the default return type of a function
+    void := static This new("void", Token _null) // Void type wich is the default return type of a function
     
     pointer?: func -> Bool {
         instanceOf?(PointerType)
@@ -63,6 +63,7 @@ VarArgType: class extends Type {
 PointerType: class extends Type {
     baseType: Type
     init: func(=baseType) { token = baseType token }
+    init: func~withToken(=baseType,=token)
     clone: func -> This {
         PointerType new(baseType clone())
     }
@@ -78,12 +79,22 @@ PointerType: class extends Type {
 }
 
 ArrayType: class extends PointerType {
-    init: super func(type: Type)
+    inner: Expression = null // The number of elements right? :D
+    init: func(=baseType)
+    init: func~withToken(=baseType,=token)
+    init: func~withInnerAndToken(=baseType,=inner,=token)
     clone: func -> This {
         ArrayType new(baseType clone())
     }
     
-    resolve: super func(resolver: Resolver)
+    resolve: func(resolver: Resolver) {
+        baseType resolve(resolver)
+        resolver push(this)
+        if(inner) inner resolve(resolver)
+        // Should check for the index being a number right? :D
+        resolver pop(this)
+        resolved? = true
+    }
     
     toString: func -> String {
         baseType toString() + "[]"
@@ -93,14 +104,14 @@ ArrayType: class extends PointerType {
 FuncType: class extends Type {
     argumentTypes := ArrayList<Type> new()
     returnType := Type void
-    init: func
+    init: func(=token)
     
     addArgument: func(type: Type) {
         argumentTypes add(type)
     }
     
     clone: func -> This {
-        c := FuncType new()
+        c := FuncType new(token)
         c returnType = returnType
         argumentTypes each(|arg|
             c argumentTypes add(arg clone())

@@ -1,4 +1,5 @@
 import ../frontend/AstBuilder
+import ../middle/Module
 
 // This is the base class for any backend.
 Backend: abstract class {

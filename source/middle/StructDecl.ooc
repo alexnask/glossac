@@ -1,4 +1,4 @@
-import Type,VariableDecl,Decl
+import Type,VariableDecl,Decl,Resolver
 import structs/ArrayList
 
 StructDecl: class extends Decl {
@@ -7,7 +7,7 @@ StructDecl: class extends Decl {
     getType: func -> Type { type }
     
     init: func(name: String,=token) {
-        type = Type new(name)
+        type = Type new(name,token)
     }
     
     clone: func -> This {
@@ -36,7 +36,7 @@ StructDecl: class extends Decl {
     toString: func -> String {
         ret := "Δομή "
         ret += type toString() + " "
-        if(extern?()) ret += "εξωτερική(" + externName + ") "
+        if(isextern?()) ret += "εξωτερική(" + externName + ") "
         ret
     }
 }

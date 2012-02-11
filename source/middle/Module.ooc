@@ -1,15 +1,16 @@
 import structs/ArrayList
-import Node,Import,Use,FunctionDecl,StructDecl,VariableDecl,Resolver,FunctionCall
+import ../frontend/Token
+import Node,FunctionDecl,StructDecl,VariableDecl,Resolver,FunctionCall
 
 Module: class extends Node {
     path: String
-    init: func(=path,=token)
+    init: func(=path) { super(Token _null) }
 
     functions := ArrayList<FunctionDecl> new()
     structures := ArrayList<StructDecl> new()
     variables := ArrayList<VariableDecl> new()
-    imports := ArrayList<Import> new()
-    uses := ArrayList<Use> new()
+    //imports := ArrayList<Import> new()
+    //uses := ArrayList<Use> new()
     
     resolve: func(resolver: Resolver) {
         if(resolved?) return
@@ -28,13 +29,13 @@ Module: class extends Node {
         resolved? = true
     }
     
-    addUse: func(_use: Use) {
-        uses add(_use)
-    }
+    //addUse: func(_use: Use) {
+    //    uses add(_use)
+    //}
     
-    addImport: func(_import: Import) {
-        imports add(_import)
-    }
+    //addImport: func(_import: Import) {
+    //    imports add(_import)
+    //}
     
     addFunction: func(fd: FunctionDecl) {
         functions add(fd)
@@ -44,11 +45,15 @@ Module: class extends Node {
         structures add(sd)
     }
     
+    addVariable: func(vd: VariableDecl) {
+        variables add(vd)
+    }
+    
     toString: func -> String {
         "Module[" + path + "]"
     }
     
     clone: func -> This {
-        Module new(path,token)
+        Module new(path)
     }
 }

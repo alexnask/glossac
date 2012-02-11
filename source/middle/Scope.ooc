@@ -1,9 +1,9 @@
 import structs/ArrayList
-import Statement,Resolver,VariableDecl
+import Statement,Resolver,VariableDecl,Node
 
 Scope: class extends Node {
     list := ArrayList<Statement> new()
-    
+    init: func
     resolve: func(resolver: Resolver) {
         if(resolved?) return
 
@@ -22,6 +22,18 @@ Scope: class extends Node {
             }
         }
         null
+    }
+    
+    add: func(stmt: Statement) {
+        list add(stmt)
+    }
+    
+    clone: func -> This {
+        c := Scope new()
+        list each(|stmt|
+            c add(stmt clone() as Statement)
+        )
+        c
     }
     
     toString: func -> String {

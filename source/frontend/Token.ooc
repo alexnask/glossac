@@ -4,7 +4,7 @@ import ../middle/Module
 // Shamelessly copied that from rock D:
 
 /* Will go into the load method of Token */
-Token _nul = Token new(0, 0, null)
+Token _null = Token new(0, 0, null)
 
 Token: cover {
     
@@ -43,7 +43,7 @@ Token: cover {
      */
     toString: func -> String {
         module != null ? (
-            "%s [%d, %d]" format(module getFullName(), getStart(), getEnd())
+            "%s [%d, %d]" format(module path, getStart(), getEnd())
         ) : (
             "[%d, %d]" format(getStart(), getEnd())
         )
@@ -90,7 +90,7 @@ Token: cover {
         over := Buffer new()
 
         if(type != "") {
-            b append(prefix). append("%s:%d:%d %s %s\n" format(module getPath(".ooc"), lines, start - lastNewLine, type, message))
+            b append(prefix). append("%s:%d:%d %s %s\n" format(module path, lines, start - lastNewLine, type, message))
         } else if(message != "") {
             b append(prefix). append(message). append('\n')
         }
@@ -146,6 +146,22 @@ Token: cover {
         fr close()
 
         return lines
+    }
+    
+    getLength: func -> SizeT {
+        return length
+    }
+
+    getStart: func -> SizeT {
+        return start
+    }
+
+    getEnd: func -> SizeT {
+        return start + length
+    }
+
+    equals?: func (other: This) -> Bool {
+        return memcmp(this&, other&, This size) == 0
     }
 }
 

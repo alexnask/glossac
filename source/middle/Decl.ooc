@@ -7,6 +7,6 @@ Decl: abstract class extends Expression {
     externName: String // null -> not extern, "" -> extern with default name
     unmangledName: String // null -> not unmangled, "" -> unmangled with default name
     
-    extern?: func -> Bool { externName != null }
-    unmangled?: func -> Bool { unmangledName != null }
+    isextern?: func -> Bool { externName != null }
+    isunmangled?: func -> Bool { unmangledName != null }
 }

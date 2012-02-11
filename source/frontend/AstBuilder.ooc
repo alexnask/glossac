@@ -1,6 +1,6 @@
 import io/File, text/[EscapeSequence]
 import structs/[ArrayList, List, Stack, HashMap]
-import ../middle/[Module,Expression,FunctionCall,FunctionDecl,Statement,StatementDecl,Type,VariableAccess,VariableDecl,Node,Scope]
+import ../middle/[Module,Expression,StructDecl,FunctionCall,FunctionDecl,Statement,Statement,Type,VariableAccess,VariableDecl,Node,Scope]
 import Token
 
 parse: extern proto func (AstBuilder, CString) -> Int
@@ -96,22 +96,17 @@ AstBuilder: class {
      */
 
     onStructStart: unmangled(onStructStart) func (name: CString) {
-        /*
-        cDecl := ClassDecl new(name toString(), token())
-        cDecl setVersion(getVersion())
-        cDecl doc = doc toString()
-        cDecl module = module
-        module addType(cDecl)
-        stack push(cDecl)
-        */
+        structDecl := StructDecl new(name toString(),token())
+        module addStructure(structDecl)
+        stack push(structDecl)
     }
 
     onStructBody: unmangled(onStructBody) func {
-        //peek(ClassDecl) addDefaultInit()
+        // Ignore for now
     }
 
     onStructEnd: unmangled(onStructEnd) func {
-        //pop(ClassDecl)
+        pop(StructDecl)
     }
 
     /*
@@ -119,69 +114,59 @@ AstBuilder: class {
      */
 
     onVarDeclStart: unmangled(onVarDeclStart) func {
-        //stack push(Stack<VariableDecl> new())
+        stack push(Stack<VariableDecl> new())
     }
 
     onVarDeclName: unmangled(onVarDeclName) func (name: CString) {
-        //vDecl := VariableDecl new(null, name toString(), token())
-        //vDecl doc = doc toString()
-        //peek(Stack<VariableDecl>) push(vDecl)
+        vDecl := VariableDecl new(name toString(), null, token())
+        peek(Stack<VariableDecl>) push(vDecl)
     }
 
     onVarDeclExtern: unmangled(onVarDeclExtern) func (cexternName: CString) {
-        /*
         externName := cexternName toString()
         vars := peek(Stack<VariableDecl>)
         if(externName empty?()) {
-            vars each(|var| var setExternName(""))
+            vars each(|var| var externName = "")
         } else {
             if(vars getSize() != 1) {
-                params errorHandler onError(SyntaxError new(token(), "Trying to set an extern name on several variables at once!"))
+                //params errorHandler onError(SyntaxError new(token(), "Trying to set an extern name on several variables at once!"))
+                "Trying to set an extern name on several variables at once!" println()
             }
-            vars peek() setExternName(externname: CString)
+            vars peek() externName = cexternName toString()
         }
-        */
     }
 
     onVarDeclUnmangled: unmangled(onVarDeclUnmangled) func (cunmangledName: CString) {
-        /*
         unmangledName :=cunmangledName toString()
         vars := peek(Stack<VariableDecl>)
         if(unmangledName empty?()) {
-            vars each(|var| var setUnmangledName(""))
+            vars each(|var| var unmangledName = "")
         } else {
             if(vars getSize() != 1) {
-                params errorHandler onError(SyntaxError new(token(), "Trying to set an unmangled name on several variables at once!"))
+                //params errorHandler onError(SyntaxError new(token(), "Trying to set an unmangled name on several variables at once!"))
+                "Trying to set an unmangled name on several variables at once!" println()
             }
-            vars peek() setUnmangledName(unmangledname: CString)
+            vars peek() unmangledName = cunmangledName toString()
         }
-        */
     }
 
     onVarDeclExpr: unmangled(onVarDeclExpr) func (expr: Expression) {
-        //peek(Stack<VariableDecl>) peek() setExpr(expr)
-    }
-
-    onVarDeclStatic: unmangled(onVarDeclStatic) func {
-        //peek(Stack<VariableDecl>) each(|vd| vd setStatic(true))
+        peek(Stack<VariableDecl>) peek() expr = expr
     }
 
     onVarDeclType: unmangled(onVarDeclType) func (type: Type) {
-        //peek(Stack<VariableDecl>) each(|vd| vd type = type)
+        peek(Stack<VariableDecl>) each(|vd| vd type = type)
     }
 
     onVarDeclEnd: unmangled(onVarDeclEnd) func -> Object {
-        null
-        /*
         stack := pop(Stack<VariableDecl>)
         if(stack getSize() == 1) return stack peek() as Object
         // FIXME: Better detection to avoid 'stack' being passed as a Statement to, say, an If
         return stack as Object
-        */
     }
     
-    /*
     gotVarDecl: func (vd: VariableDecl) {
+        /*
         hash := ac_X31_hash(vd getName())
         idx := reservedHashs indexOf(hash)
         if(idx != -1) {
@@ -191,45 +176,33 @@ AstBuilder: class {
                 params errorHandler onError(ReservedKeywordError new(vd token, "%s is a reserved C99 keyword, you can't use it in a variable declaration" format(vd getName())))
             }
         }
+        */
 
         match (node := peek(Object)) {
-            case tDecl: TypeDecl =>
-                tDecl addVariable(vd)
+            case sDecl: StructDecl =>
+                sDecl fields add(vd)
             case list: List<Node> =>
-                vd isArg = true
+                //vd isArg = true
                 list add(vd)
             case =>
                 gotStatement(vd)
         }
     }
-    */
 
     /*
      * Types
      */
 
     onTypeNew: unmangled(onTypeNew) func (name: CString) -> Type {
-        null
-        //BaseType new(name toString() trim(), token())
+        Type new(name toString() trim(), token())
     }
 
     onTypePointer: unmangled(onTypePointer) func (type: Type) -> Type {
-        null
-        //PointerType new(type, token())
+        PointerType new(type, token())
     }
 
     onTypeBrackets: unmangled(onTypeBrackets) func (type: Type, inner: Expression) -> Type {
-        null
-        //ArrayType new(type, inner, token())
-    }
-
-    onTypeList: unmangled(onTypeList) func -> TypeList {
-        null
-        //TypeList new(token())
-    }
-
-    onTypeListElement: unmangled(onTypeListElement) func (list: TypeList, element: Type) {
-        //list types add(element)
+        ArrayType new(type, inner, token())
     }
 
     /*
@@ -237,26 +210,19 @@ AstBuilder: class {
      */
 
     onFuncTypeNew: unmangled(onFuncTypeNew) func -> FuncType {
-        null
-        /*
-        f := FuncType new(token())
-        f isClosure = true
-        f
-        */
+        FuncType new(token())
     }
 
     onFuncTypeArgument: unmangled(onFuncTypeArgument) func (f: FuncType, argType: Type) {
-        //f argTypes add(argType)
+        f argumentTypes add(argType)
     }
 
     onFuncTypeVarArg: unmangled(onFuncTypeVarArg) func (f: FuncType) {
-        // TODO: what if we actually want ooc varargs in a FuncType?
-        // I'm really not sure what to do syntax-wise.
-        //f varArg = VarArgType C
+        f argumentTypes add(VarArgType new())
     }
 
     onFuncTypeReturnType: unmangled(onFuncTypeReturnType) func (f: FuncType, returnType: Type) {
-        //f returnType = returnType
+        f returnType = returnType
     }
 
     /*
@@ -264,53 +230,37 @@ AstBuilder: class {
      */
 
     onFunctionStart: unmangled(onFunctionStart) func (name: CString) {
-        /*
-        fDecl := FunctionDecl new(name toString(), token())
-        fDecl setVersion(getVersion())
-        fDecl doc = doc toString()
-        stack push(fDecl)
-        */
+        stack push(FunctionDecl new(name toString(), token()))
     }
 
     onFunctionExtern: unmangled(onFunctionExtern) func (externName: CString) {
-        //peek(FunctionDecl) setExternName(externName toString())
+        peek(FunctionDecl) externName = externName toString()
     }
 
     onFunctionUnmangled: unmangled(onFunctionUnmangled) func (unmangledName: CString) {
-        //peek(FunctionDecl) setUnmangledName(unmangledName toString())
+        peek(FunctionDecl) unmangledName = unmangledName toString()
     }
 
     onFunctionArgsStart: unmangled(onFunctionArgsStart) func {
-        //stack push(peek(FunctionDecl) args)
+        stack push(peek(FunctionDecl) arguments)
     }
 
     onFunctionArgsEnd: unmangled(onFunctionArgsEnd) func {
-        //pop(ArrayList<Argument>)
+        pop(ArrayList<VariableDecl>)
     }
 
     onFunctionReturnType: unmangled(onFunctionReturnType) func (type: Type) {
-        //peek(FunctionDecl) returnType = type
+        peek(FunctionDecl) returnType = type
     }
 
     onFunctionBody: unmangled(onFunctionBody) func {
-        //peek(FunctionDecl) hasBody = true
+        peek(FunctionDecl) body = Scope new()
     }
 
     onFunctionEnd: unmangled(onFunctionEnd) func -> FunctionDecl {
-        null
-        /*
         fDecl := pop(FunctionDecl)
-
-        match(node := peek(Object)) {
-            case module =>
-                module addFunction(fDecl)
-            case tDecl: TypeDecl =>
-                tDecl addFunction(fDecl)
-            case addon: Addon =>
-                addon addFunction(fDecl)
-        }
+        peek(Module) addFunction(fDecl)
         return fDecl
-        */
     }
 
     /*
@@ -318,20 +268,15 @@ AstBuilder: class {
      */
 
     onFunctionCallStart: unmangled(onFunctionCallStart) func (name: CString) {
-        //stack push(FunctionCall new(name toString(), token()))
+        stack push(FunctionCall new(name toString(), token()))
     }
 
     onFunctionCallArg: unmangled(onFunctionCallArg) func (expr: Expression) {
-        //peek(FunctionCall) args add(expr)
+        peek(FunctionCall) args add(expr)
     }
 
     onFunctionCallEnd: unmangled(onFunctionCallEnd) func -> FunctionCall {
-        null
-        //pop(FunctionCall)
-    }
-
-    onFunctionCallExpr: unmangled(onFunctionCallExpr) func (call: FunctionCall, expr: Expression) {
-        //call expr = expr
+        pop(FunctionCall)
     }
 
     /*
@@ -350,7 +295,6 @@ AstBuilder: class {
 
     // statement
     onStatement: unmangled(onStatement) func (stmt: Statement) {
-        /*
         match stmt {
             case vd: VariableDecl =>
                 gotVarDecl(vd)
@@ -363,17 +307,16 @@ AstBuilder: class {
             case =>
                 gotStatement(stmt)
         }
-        */
     }
 
     gotStatement: func (stmt: Statement) {
-        /*
         node := peek(Node)
 
         match {
             case node instanceOf?(FunctionDecl) =>
                 fDecl := node as FunctionDecl
                 fDecl body add(stmt)
+            /*
             case node instanceOf?(ControlStatement) =>
                 cStmt := node as ControlStatement
                 cStmt body add(stmt)
@@ -383,45 +326,29 @@ AstBuilder: class {
                     params errorHandler onError(SyntaxError new(stmt token, "Expected an expression here, not a statement!"))
                 }
                 aa indices add(stmt as Expression)
+            */
             case node instanceOf?(Module) =>
                 if(stmt instanceOf?(VariableDecl)) {
                     vd := stmt as VariableDecl
-                    vd setGlobal(true)
-                }
-                module := node as Module
-
-                spec := getVersion()
-                if(spec != null) {
-                    vb := VersionBlock new(spec, token())
-                    vb getBody() add(stmt)
-                    module body add(vb)
+                    node as Module addVariable(vd)
                 } else {
-                    module body add(stmt)
+                    // We have a decision to make here
+                    // Can we add stray code to the module or just functions structures and variable declarations?
+                    //module := node as Module
+                    //module body add(stmt)
                 }
-            case node instanceOf?(ClassDecl) =>
-                cDecl := node as ClassDecl
-                fDecl := cDecl lookupFunction(ClassDecl DEFAULTS_FUNC_NAME, "")
-                if(fDecl == null) {
-                    fDecl = FunctionDecl new(ClassDecl DEFAULTS_FUNC_NAME, cDecl token)
-                    cDecl addFunction(fDecl)
-                }
-                fDecl getBody() add(stmt)
+            /*
             case node instanceOf?(ArrayLiteral) =>
                 arrayLit := node as ArrayLiteral
                 if(!stmt instanceOf?(Expression)) {
                     params errorHandler onError(SyntaxError new(stmt token, "Expected an expression here, not a statement!"))
                 }
                 arrayLit getElements() add(stmt as Expression)
-            case node instanceOf?(Tuple) =>
-                tuple := node as Tuple
-                if(!stmt instanceOf?(Expression)) {
-                    params errorHandler onError(SyntaxError new(stmt token, "Expected an expression here, not a statement!"))
-                }
-                tuple getElements() add(stmt as Expression)
+            */
+            // TODO: Add structure handling
             case =>
-                "[gotStatement] Got a %s, don't know what to do with it, parent = %s\n" printfln(stmt toString(), node class name: CString)
+                "[gotStatement] Got a %s, don't know what to do with it, parent = %s\n" printfln(stmt toString(), node class name)
         }
-        */
     }
 
     onArrayAccessStart: unmangled(onArrayAccessStart) func (array: Expression) {
@@ -441,8 +368,7 @@ AstBuilder: class {
 
     // variable access
     onVarAccess: unmangled(onVarAccess) func (expr: Expression, name: CString) -> Expression {
-        null
-        //return VariableAccess new(expr, name toString(), token())
+        return VariableAccess new(name toString(), expr, token())
     }
 
     // cast
@@ -515,7 +441,7 @@ AstBuilder: class {
 
     onTypeArg: unmangled(onTypeArg) func (type: Type) {
         // TODO: add check for extern function (TypeArgs are illegal in non-extern functions.)
-        //peek(List<Node>) add(Argument new(type, "", token()))
+        peek(List<Node>) add(VariableDecl new("", type, token()))
     }
 
     onBreak: unmangled(onBreak) func -> FlowControl {
@@ -703,6 +629,32 @@ AstBuilder: class {
     
     token: func -> Token {
         Token new(tokenPos[0], tokenPos[1], module)
+    }
+    
+    peek: func <T> (T: Class) -> T {
+        node := stack peek() as Node
+        if(!node instanceOf?(T)) {
+            "Should've peek'd a %s, but peek'd a %s. Stack = %s" format(T name, node class name, stackRepr()) println()
+             exit(1)
+        }
+        return node
+    }
+
+    pop: func <T> (T: Class) -> T {
+        node := stack pop() as Node
+        if(!node instanceOf?(T)) {
+            "Should've pop'd a %s, but pop'd a %s. Stack = %s" format(T name, node class name, stackRepr()) println()
+            exit(1)
+        }
+        return node
+    }
+    
+    stackRepr: func -> String {
+        sb := Buffer new()
+        for(e in stack) {
+            sb append(e class name). append(", ")
+        }
+        sb toString()
     }
 }
 

@@ -1,6 +1,6 @@
 import structs/Stack
 import ../frontend/Token
-import Module,FunctionDecl,StructureDecl,VariableDecl
+import Module,FunctionDecl,StructDecl,VariableDecl,Node,Scope
 
 Resolver: class {
     parents := Stack<Node> new()
@@ -12,7 +12,7 @@ Resolver: class {
     findFunctionDecl: func(name: String) -> FunctionDecl {
         iter := parents backIterator()
         while(iter hasPrev?()) {
-            node := iter prev()
+            node := iter prev() as Node
             if(node instanceOf?(Module)) { // Functions can only be defined in a module's core
                 found: FunctionDecl = null
                 node as Module functions each(|decl|
@@ -31,7 +31,7 @@ Resolver: class {
     findVariableDecl: func(name: String) -> VariableDecl {
         iter := parents backIterator()
         while(iter hasPrev?()) {
-            node := iter prev()
+            node := iter prev() as Node
             if(node instanceOf?(Module)) { // Global variable
                 found: VariableDecl = null
                 node as Module variables each(|decl|
@@ -50,15 +50,15 @@ Resolver: class {
     findStructDecl: func(name: String) -> StructDecl {
         iter := parents backIterator()
         while(iter hasPrev?()) {
-            node := iter prev()
+            node := iter prev() as Node
             if(node instanceOf?(Module)) { // Structures can only be defined in the module's core
                 found: StructDecl = null
                 node as Module structures each(|decl|
-                    if(decl name == name) found = decl
+                    if(decl type name == name) found = decl
                 )
                 if(found) return found
             } else if(node instanceOf?(StructDecl)) { // Or is it type recursion?
-                if(node as StructDecl name == name) return node as StructDecl
+                if(node as StructDecl type name == name) return node as StructDecl
             }
         }
         null

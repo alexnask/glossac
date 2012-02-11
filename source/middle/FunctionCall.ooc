@@ -10,10 +10,8 @@ FunctionCall: class extends Expression {
     init: func(=name, =token)
     clone: func -> This {
         c := FunctionCall new(name,token)
-        c externName = externName
-        c unmangledName = unmangledName
         args each(|arg|
-            c args add(arg clone())
+            c args add(arg clone() as Expression)
         )
         c
     }
@@ -48,14 +46,14 @@ FunctionCall: class extends Expression {
     matches?: func(fd: FunctionDecl) -> Bool {
         if(!fd) return false
         // Varargs should only be the last argument type of a function
-        if(fd arguments get(-1) type instanceOf?(VarArgType)) {
-            if(args size() < fd arguments size() - 1) return false
-            for(i in 0 .. fd arguments size() - 1) {
+        if(fd arguments last() type instanceOf?(VarArgType)) {
+            if(args getSize() < fd arguments getSize() - 1) return false
+            for(i in 0 .. fd arguments getSize() - 1) {
                 if(fd arguments get(i) type dereference() != args get(i) getType() dereference()) return false
             }
             return true
-        } else if(args size() != fd arguments size()) return false
-        for(i in 0 .. fd arguments size()) {
+        } else if(args getSize() != fd arguments getSize()) return false
+        for(i in 0 .. fd arguments getSize()) {
             if(fd arguments get(i) type dereference() != args get(i) getType() dereference()) return false
         }
         true
@@ -68,6 +66,18 @@ FunctionCall: class extends Expression {
     getType: func -> Type {
         // The type of the function call as an expression is the type returned by the function :D
         (ref) ? ref returnType : null
+    }
+    
+    toString: func -> String {
+        ret := name + "("
+        isFirst := true
+        for(arg in args) {
+            if(isFirst) isFirst = false
+            else ret += ", "
+            ret += arg toString()
+        }
+        ret += ")"
+        ret
     }
 }
 
