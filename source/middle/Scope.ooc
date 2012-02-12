@@ -9,7 +9,9 @@ Scope: class extends Node {
 
         resolver push(this)
         list each(|elem|
+            resolver push(elem)
             elem resolve(resolver)
+            resolver pop(elem)
         )
         resolver pop(this)
     }

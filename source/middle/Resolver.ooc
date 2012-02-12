@@ -45,11 +45,11 @@ Resolver: class {
                     if(scope == 0) return 2
                     else if(scope > 0) return 1
                 }
-            } else if(instanceOf?(Module)) {
+            } else if(node instanceOf?(Module)) {
                 scope += 1
                 found: VariableDecl = null
                 node as Module variables each(|decl|
-                    if(decl name == name) found = decl
+                    if(decl name == name && decl resolved?) found = decl
                 )
                 if(found && scope == 0) return 2
                 else if(found && scope > 0) return 1
