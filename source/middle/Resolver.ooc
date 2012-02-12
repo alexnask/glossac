@@ -7,6 +7,10 @@ Resolver: class {
     init: func(parent: Module) {
         parent resolve(this) // Module pushes itself in the resolver anyway
     }
+    
+    checkFunctionRedifinition: func(name: String) -> Bool {
+        false
+    }
 
     // This function tries to find a function declaration based on it's name in the current resolver's trail
     findFunctionDecl: func(name: String) -> FunctionDecl {
@@ -27,6 +31,12 @@ Resolver: class {
         null
     }
 
+    // 0: No redifinition
+    // 1: Shadowing
+    // 2: Illegal redifinition
+    checkVariableRedifinition: func(name: String) -> UInt {
+    }
+    
     // This function tries to find a variable declaration based on it's name in the current resolver's trail
     findVariableDecl: func(name: String) -> VariableDecl {
         iter := parents backIterator()
@@ -79,7 +89,11 @@ Resolver: class {
     }
 
     fail: func(msg: String, token: Token) {
-        Exception new("Resolver failed: " + msg + ((!token equals?(nullToken)) ? "\nAt " + token toString() : "")) throw()
+        Exception new("Error: " + msg + ((!token equals?(nullToken)) ? "\nAt " + token toString() : "")) throw()
+    }
+    
+    warn: func(msg: String, token: Token) {
+        ("Warning: " + msg + ((!token equals?(nullToken)) ? "\nAt " + token toString() : "")) println()
     }
 }
 

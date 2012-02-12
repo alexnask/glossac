@@ -5,6 +5,9 @@
 Δομή int εξωτερική
 Τέλος
 
+Δομή void εξωτερική
+Τέλος
+
 Δομή test
     a: int
     b: void*
@@ -17,7 +20,10 @@
 Συνάρτηση other
     arg1: test
     arg1.b
+    arg1: int
 Τέλος
 
-Δομή void εξωτερική
+Συνάρτηση other (arg: test) -> test
 Τέλος
+
+

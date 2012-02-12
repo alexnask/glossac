@@ -19,6 +19,11 @@ VariableDecl: class extends Decl {
         if(resolved?) return
 
         resolver push(this)
+
+        redifinitionLevel := resolver checkVariableRedifinition(name)
+        if(redifinitionLevel == 1) resolver warn("Definition of " + name + " shadows previous definition", token)
+        else if(redifinitionLevel == 2) resolver fail("Illegal redifinition of " + name, token)
+
         type resolve(resolver)
         if(expr) {
             expr resolve(resolver)
