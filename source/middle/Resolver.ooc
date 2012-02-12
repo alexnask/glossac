@@ -8,7 +8,14 @@ Resolver: class {
         parent resolve(this) // Module pushes itself in the resolver anyway
     }
     
-    checkFunctionRedifinition: func(name: String) -> Bool {
+    checkRootSymbolRedifinition: func(name: String) -> Bool {
+        iter := parents backIterator()
+        while(iter hasPrev?()) {
+            node := iter prev() as Node
+            if(node instanceOf?(Module)) {
+                if(found := node as Module symbol(name)) if(found resolved?) return true
+            }
+        }
         false
     }
 
@@ -53,6 +60,7 @@ Resolver: class {
                 )
                 if(found && scope == 0) return 2
                 else if(found && scope > 0) return 1
+                else if(node as Module hasStruct?(name) || node as Module hasFunction?(name)) return 2
             }
         }
         0

@@ -24,6 +24,7 @@ StructDecl: class extends Decl {
         if(resolved?) return
 
         resolver push(this)
+        if(resolver checkRootSymbolRedifinition(type name)) resolver fail("Redifinition of structure " + type name, token)
         // Resolve the fields' types
         // A structure's fields cannot have default values
         fields each(|field|

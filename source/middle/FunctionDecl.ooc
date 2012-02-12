@@ -13,7 +13,8 @@ FunctionDecl: class extends Decl {
         if(resolved?) return
         
         resolver push(this)
-        if(resolver checkFunctionRedifinition(name)) resolver fail("Redifinition of function " + name, token)
+        // Fix redifinition of functions :(
+        if(resolver checkRootSymbolRedifinition(name)) resolver fail("Redifinition of function " + name, token)
 
         if(returnType) {
             returnType resolve(resolver)

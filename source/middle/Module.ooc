@@ -1,6 +1,6 @@
 import structs/ArrayList
 import ../frontend/Token
-import Node,FunctionDecl,StructDecl,VariableDecl,Resolver,FunctionCall
+import Node,FunctionDecl,StructDecl,VariableDecl,Resolver,FunctionCall,Type
 
 Module: class extends Node {
     path: String
@@ -51,6 +51,44 @@ Module: class extends Node {
     
     toString: func -> String {
         "Module[" + path + "]"
+    }
+    
+    symbol: func(name: String) -> Node {
+        for(sd in structures) {
+            if(sd type name == name) return sd as Node
+        }
+        for(vd in variables) {
+            if(vd name == name) return vd as Node
+        }
+        for(fd in functions) {
+            if(fd name == name) return fd as Node
+        }
+        null
+    }
+    
+    hasSymbol?: func(name: String) -> Bool {
+        hasVariable?(name) || hasStruct?(name) || hasFunction?(name)
+    }
+    
+    hasStruct?: func(name: String) -> Bool {
+        for(sd in structures) {
+            if(sd type name == name) return true
+        }
+        false
+    }
+    
+    hasFunction?: func(name: String) -> Bool {
+        for(fd in functions) {
+            if(fd name == name) return true
+        }
+        false
+    }
+    
+    hasVariable?: func(name: String) -> Bool {
+        for(vd in variables) {
+            if(vd name == name) return true
+        }
+        false
     }
     
     clone: func -> This {
