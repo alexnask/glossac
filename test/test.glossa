@@ -17,10 +17,10 @@
     arg.a
 Τέλος
 
+arg1: int
 Συνάρτηση other
     arg1: test
     arg1.b
-    arg1: int
 Τέλος
 
 Συνάρτηση other (arg: test) -> test

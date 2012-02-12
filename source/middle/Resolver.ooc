@@ -35,6 +35,27 @@ Resolver: class {
     // 1: Shadowing
     // 2: Illegal redifinition
     checkVariableRedifinition: func(name: String) -> UInt {
+        scope: Int = -1
+        iter := parents backIterator()
+        while(iter hasPrev?()) {
+            node := iter prev() as Node
+            if(node instanceOf?(Scope)) {
+                scope += 1
+                if(node as Scope variable(name)) {
+                    if(scope == 0) return 2
+                    else if(scope > 0) return 1
+                }
+            } else if(instanceOf?(Module)) {
+                scope += 1
+                found: VariableDecl = null
+                node as Module variables each(|decl|
+                    if(decl name == name) found = decl
+                )
+                if(found && scope == 0) return 2
+                else if(found && scope > 0) return 1
+            }
+        }
+        0
     }
     
     // This function tries to find a variable declaration based on it's name in the current resolver's trail

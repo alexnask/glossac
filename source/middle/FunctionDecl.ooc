@@ -13,7 +13,7 @@ FunctionDecl: class extends Decl {
         if(resolved?) return
         
         resolver push(this)
-        if(resolver checkFunctionRedifinition(name)) resovler fail("Redifinition of function " + name, token)
+        if(resolver checkFunctionRedifinition(name)) resolver fail("Redifinition of function " + name, token)
 
         if(returnType) {
             returnType resolve(resolver)
@@ -25,7 +25,7 @@ FunctionDecl: class extends Decl {
         for(stmt in body list) {
             // Normally we should not have null statements pop up
             // But the AST building is not complete so we do
-            // TODO: remove if statement once the AST builder is complete
+            // TODO: remove if(stmt) once the AST builder is complete
             if(stmt) stmt resolve(resolver)
         }
         resolver pop(body)
