@@ -22,6 +22,7 @@ FunctionDecl: class extends Decl {
         for(argument in arguments) {
             argument resolve(resolver)
         }
+        if(isextern?() && body) resolver fail("Extern function " + name + " can't have a function body", token)
         body resolve(resolver)
         resolved? = true
         resolver pop(this)
