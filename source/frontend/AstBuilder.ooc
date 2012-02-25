@@ -662,7 +662,7 @@ AstBuilder: class {
     }
     
     error: func (errorID: Int, message: String, index: Int) {
-        Exception new(Token new(index, 1, module) formatMessage(message)) throw()
+        Exception new(Token new(index, 1, module) formatMessage("[ERROR]: ", message)) throw()
     }
 }
 

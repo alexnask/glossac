@@ -119,11 +119,11 @@ Resolver: class {
     }
 
     fail: func(msg: String, token: Token) {
-        Exception new(token formatMessage(msg)) throw()
+        Exception new(token formatMessage("[ERROR]: ", msg)) throw()
     }
     
     warn: func(msg: String, token: Token) {
-        ("Warning: " + msg + ((!token equals?(nullToken)) ? "\nAt " + token toString() : "")) println()
+        token formatMessage("[WARNING]: ", msg) println()
     }
 }
 

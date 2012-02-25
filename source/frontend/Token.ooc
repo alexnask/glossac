@@ -87,10 +87,10 @@ Token: cover {
         over := Buffer new()
 
         if(message != "") {
-            b append(prefix). append("[ERROR:] At %s line %d: \n" format(module path, lines)). append(prefix). append("%s\n" format(message))
+            b append(prefix). append("At %s line %d: \n" format(module path, lines)). append(prefix). append("%s\n" format(message))
         }
 
-        b append(prefix). append('"')
+        b append('"')
         end := getEnd()
         beginning := true
         for(i in (lastNewLine + 1)..(idx + 1)) {
@@ -108,7 +108,7 @@ Token: cover {
                     b append(c)
             }
         }
-        b append('"'). append('\n'). append(prefix)
+        b append('"'). append('\n')
         b append(over)
 
         fr close()
