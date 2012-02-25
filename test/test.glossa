@@ -16,7 +16,7 @@
 Δομή other
 Τέλος
 
-Συνάρτηση β (arg: test*) -> int
+Συνάρτηση β (arg: test*) : int
     arg.a
 Τέλος
 
