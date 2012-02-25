@@ -48,7 +48,6 @@ FunctionCall: class extends Expression {
     // int[]****
     // We would not be able to. In the countrary, we would succeed with an expression of type
     // int[]*[]*** or int[]*[]
-    // TODO: add the correct amount of referencing or dereferencing to the passed argument using the `Expression pointerize` and `Type pointerLevel` methods
     matches?: func(fd: FunctionDecl) -> Bool {
         if(!fd) return false
         // Varargs should only be the last argument type of a function

@@ -1,6 +1,6 @@
 import io/File, text/[EscapeSequence]
 import structs/[ArrayList, List, Stack, HashMap]
-import ../middle/[Module,Expression,StructDecl,FunctionCall,FunctionDecl,Statement,Statement,Type,VariableAccess,VariableDecl,Node,Scope,If,Conditional]
+import ../middle/[Module,Expression,StructDecl,FunctionCall,FunctionDecl,Statement,Statement,Type,VariableAccess,VariableDecl,Node,Scope,If,Conditional,Else]
 import Token
 
 parse: extern proto func (AstBuilder, CString) -> Int
@@ -18,7 +18,6 @@ Return: class {}
 Cast: class {}
 Block: class {}
 
-Else: class {}
 Foreach: class {}
 While: class {}
 FlowControl: class {}
@@ -381,12 +380,12 @@ AstBuilder: class {
 
     // else
     onElseStart: unmangled(onElseStart) func {
-        //stack push(Else new(token()))
+        peek(If)
+        stack push(Else new(token()))
     }
 
     onElseEnd: unmangled(onElseEnd) func -> Else {
-        null
-        //pop(Else)
+        pop(Else)
     }
 
     // foreach

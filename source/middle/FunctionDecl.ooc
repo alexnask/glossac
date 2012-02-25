@@ -51,7 +51,7 @@ FunctionDecl: class extends Decl {
             else ret += ", "
             ret += arg toString()
         }
-        ret += ") -> "
+        ret += ") : "
         ret += returnType toString()
         ret
     }

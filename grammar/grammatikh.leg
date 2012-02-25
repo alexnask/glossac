@@ -497,6 +497,7 @@ Else    = (
           - THEN_KW
           ( - EOL )?
           - Body
+                         { $$=onIfEnd(core->this); onStatement(core->this,$$); }
           )?
           ( - EOL )?
           - Body
