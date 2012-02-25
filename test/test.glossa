@@ -1,5 +1,6 @@
 Χρήση woot
 Εισήγαγε path/[one,two]
+//TODO: Fix them unicode problems :/
 
 // Note that all types are declared as structures, even those wich are really not in C.
 Δομή int εξωτερική
@@ -8,23 +9,22 @@
 Δομή void εξωτερική
 Τέλος
 
+Δομή char εξωτερική
+Τέλος
+
 Δομή test
     a: int
     b: void*
+    c: char
 Τέλος
 
 Δομή other
 Τέλος
 
-Συνάρτηση β (arg: test*) : int
-    /*
-    Αν 1 = 1 τότε
-        arg.a
-    Αλλιώς Αν 2 = 3 τότε
+// π and above -> invalid identifier
+Συνάρτηση α (arg: test*) : int
+    Αν arg.a τότε
         arg.b
-    Αλλιώς
-        arg.a
     Τέλος
-    */
 Τέλος
 

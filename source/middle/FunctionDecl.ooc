@@ -13,7 +13,6 @@ FunctionDecl: class extends Decl {
         if(resolved?) return
         
         resolver push(this)
-        // Fix redifinition of functions :(
         if(resolver checkRootSymbolRedifinition(name,this)) resolver fail("Redifinition of function " + name, token)
 
         if(returnType) {
@@ -22,8 +21,8 @@ FunctionDecl: class extends Decl {
         for(argument in arguments) {
             argument resolve(resolver)
         }
-        if(isextern?() && body) resolver fail("Extern function " + name + " can't have a function body", token)
-        body resolve(resolver)
+        if(isextern?() && body && body list getSize() > 0) resolver fail("Extern function " + name + " can't have a function body", body token)
+        if(body) body resolve(resolver)
         resolved? = true
         resolver pop(this)
     }

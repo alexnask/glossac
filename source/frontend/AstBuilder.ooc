@@ -1,29 +1,9 @@
 import io/File, text/[EscapeSequence]
 import structs/[ArrayList, List, Stack, HashMap]
-import ../middle/[Module,Expression,StructDecl,FunctionCall,FunctionDecl,Statement,Statement,Type,VariableAccess,VariableDecl,Node,Scope]
+import ../middle/[Module,Expression,StructDecl,FunctionCall,FunctionDecl,Statement,Statement,Type,VariableAccess,VariableDecl,Node,Scope,If,Conditional]
 import Token
 
 parse: extern proto func (AstBuilder, CString) -> Int
-
-/* reserved C99 keywords
-reservedWords := ["auto", "int", "long", "char", "register", "short", "do",
-                  "sizeof", "double", "struct", "switch", "typedef", "union",
-                  "unsigned", "signed", "goto", "enum", "const"]
-reservedHashs := computeReservedHashs(reservedWords)
-
-ReservedKeywordError: class extends Error {
-    init: super func ~tokenMessage
-}
-
-computeReservedHashs: func (words: String[]) -> ArrayList<Int> {
-    list := ArrayList<Int> new()
-    words length times(|i|
-        word := words[i]
-        list add(ac_X31_hash(word))
-    )
-    list
-}
-*/
 
 StringLiteral: class {}
 IntLiteral: class {}
@@ -38,7 +18,6 @@ Return: class {}
 Cast: class {}
 Block: class {}
 
-If: class {}
 Else: class {}
 Foreach: class {}
 While: class {}
@@ -320,10 +299,10 @@ AstBuilder: class {
             case node instanceOf?(FunctionDecl) =>
                 fDecl := node as FunctionDecl
                 fDecl body add(stmt)
-            /*
-            case node instanceOf?(ControlStatement) =>
-                cStmt := node as ControlStatement
+            case node instanceOf?(Conditional) =>
+                cStmt := node as Conditional
                 cStmt body add(stmt)
+            /*
             case node instanceOf?(ArrayAccess) =>
                 aa := node as ArrayAccess
                 if(!stmt instanceOf?(Expression)) {
@@ -393,12 +372,11 @@ AstBuilder: class {
 
     // if
     onIfStart: unmangled(onIfStart) func (condition: Expression) {
-        //stack push(If new(condition, token()))
+        stack push(If new(condition, token()))
     }
 
     onIfEnd: unmangled(onIfEnd) func -> If {
-        null
-        //pop(If)
+        pop(If)
     }
 
     // else
