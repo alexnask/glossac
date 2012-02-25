@@ -316,7 +316,6 @@ AstBuilder: class {
 
     gotStatement: func (stmt: Statement) {
         node := peek(Node)
-
         match {
             case node instanceOf?(FunctionDecl) =>
                 fDecl := node as FunctionDecl
@@ -661,6 +660,10 @@ AstBuilder: class {
         }
         sb toString()
     }
+    
+    error: func (errorID: Int, message: String, index: Int) {
+        Exception new(Token new(index, 1, module) formatMessage(message)) throw()
+    }
 }
 
 // position in stream handling
@@ -676,7 +679,6 @@ trailingQuest: unmangled func (string: CString) -> CString           { (string t
 trailingBang:  unmangled func (string: CString) -> CString           { (string toString() + "__bang")  toCString() }
 error: unmangled func (this: AstBuilder, errorID: Int, message: CString, index: Int) {
     msg : String = (message == null) ? null : message toString()
-    msg println()
-    //this error(errorID, msg, index)
+    this error(errorID, msg, index)
 }
 

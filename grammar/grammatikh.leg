@@ -457,7 +457,7 @@ FuncType  = funcType:FuncTypeCore
 Stmt = (
               # some statements need an EOL after them...
               e:EoledStatement
-              (Terminator+ | (WS &"Τέλος") | (WS &')') | (WS &',') | (&CommentLine))
+              (Terminator+ | (WS &')') | (WS &',') | (&CommentLine))
            )
           | # ...but block don't
           ( WS c:Conditional
@@ -482,7 +482,7 @@ If      = (
           IF_KW { tokenPos; }
           - e:Expr      { onIfStart(core->this, e); }
           - THEN_KW
-          - EOL
+          ( - EOL )?
           - Body
           - END_KW
           )              { $$=onIfEnd(core->this); }
@@ -490,9 +490,16 @@ If      = (
 Else    = (
           ELSE_KW  { tokenPos; }
                          { onElseStart(core->this); }
-          - EOL
+          # We add the else-if here, because Else If something then sould not have to have an end statement
+          (
+          - IF_KW { tokenPos; }
+          - e:Expr       { onIfStart(core->this, e); }
+          - THEN_KW
+          ( - EOL )?
           - Body
-          - END_KW
+          )?
+          ( - EOL )?
+          - Body
           )              { $$=onElseEnd(core->this); }
 
 FlowControl = (Foreach | While | Break | Continue)
