@@ -15,6 +15,7 @@ If: class extends Conditional {
         if(condition getType() pointerLevel() < 1 && condition getType() toString() != "int") resolver fail("Conditional expression neither an int nor a pointer", token)
         if(body) body resolve(resolver)
         resolver pop(this)
+        resolved? = true
     }
 
     toString: func -> String {
