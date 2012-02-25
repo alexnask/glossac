@@ -8,12 +8,13 @@ Resolver: class {
         parent resolve(this) // Module pushes itself in the resolver anyway
     }
     
-    checkRootSymbolRedifinition: func(name: String) -> Bool {
+    checkRootSymbolRedifinition: func(name: String, not: Node = null) -> Bool {
         iter := parents backIterator()
         while(iter hasPrev?()) {
             node := iter prev() as Node
             if(node instanceOf?(Module)) {
-                if(found := node as Module symbol(name)) if(found resolved?) return true
+                found := node as Module symbol(name)
+                if(found && found != not) return true
             }
         }
         false
@@ -118,7 +119,7 @@ Resolver: class {
     }
 
     fail: func(msg: String, token: Token) {
-        Exception new("Error: " + msg + ((!token equals?(nullToken)) ? "\nAt " + token toString() : "")) throw()
+        Exception new(token formatMessage(msg)) throw()
     }
     
     warn: func(msg: String, token: Token) {

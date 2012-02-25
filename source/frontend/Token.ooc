@@ -46,14 +46,14 @@ Token: cover {
         )
     }
 
-    formatMessage: func ~noPrefix (message, type: String) -> String {
-        formatMessage("", message, type)
+    formatMessage: func ~noPrefix (message: String) -> String {
+        formatMessage("", message)
     }
 
-    formatMessage: func (prefix, message, type: String) -> String {
+    formatMessage: func (prefix, message: String) -> String {
 
         if(module == null) {
-            return "From unknown source [%s] %s" format(type, message)
+            return "From unknown source %s" format(message)
         }
 
         b := Buffer new()
@@ -86,13 +86,11 @@ Token: cover {
         fr reset(lastNewLine == 0 ? 0 : lastNewLine + 1)
         over := Buffer new()
 
-        if(type != "") {
-            b append(prefix). append("%s:%d:%d %s %s\n" format(module path, lines, start - lastNewLine, type, message))
-        } else if(message != "") {
-            b append(prefix). append(message). append('\n')
+        if(message != "") {
+            b append(prefix). append("[ERROR:] At %s line %d: \n" format(module path, lines)). append(prefix). append("%s\n" format(message))
         }
 
-        b append(prefix)
+        b append(prefix). append('"')
         end := getEnd()
         beginning := true
         for(i in (lastNewLine + 1)..(idx + 1)) {
@@ -108,14 +106,9 @@ Token: cover {
                     break // the outer loop, not the match.
                 case =>
                     b append(c)
-                    if(i < start || i >= end) {
-                        over append(' ')
-                    } else {
-                        over append('~')
-                    }
             }
         }
-        b append('\n'). append(prefix)
+        b append('"'). append('\n'). append(prefix)
         b append(over)
 
         fr close()

@@ -335,7 +335,7 @@ FunctionDeclBody = (
 
             # return type is optional
             (
-                - R_ARROW
+                - ':'
                 - t:Type ~{ error(core->this, EXP_RET_TYPE, "Missing return type.\n", G->pos + G->offset) }
                           { onFunctionReturnType(core->this, t) }
             )?
