@@ -80,7 +80,7 @@ Type: class extends Statement {
 
 VarArgType: class extends Type {
     init: func(token: Token) { super("...",token) }
-    
+
     resolve: func(resolver: Resolver) {
         resolved? = true // No need to resolve anything, baby :D
     }
@@ -110,14 +110,19 @@ ArrayType: class extends PointerType {
     init: func~withToken(=baseType,=token)
     init: func~withInnerAndToken(=baseType,=inner,=token)
     clone: func -> This {
-        ArrayType new(baseType clone())
+        c := ArrayType new(baseType clone(),token)
+        c inner = inner
+        c
     }
     
     resolve: func(resolver: Resolver) {
         baseType resolve(resolver)
         resolver push(this)
-        if(inner) inner resolve(resolver)
-        // Should check for the index being a number right? :D
+        if(inner) {
+            inner resolve(resolver)
+            // Make sure the index passed in the brackets is a number
+            if(!inner getType() number?()) resolver fail("An array's index should be a number, got a %s" format(inner getType() name), token)
+        }
         resolver pop(this)
         resolved? = true
     }

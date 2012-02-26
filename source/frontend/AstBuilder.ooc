@@ -148,18 +148,6 @@ AstBuilder: class {
     }
     
     gotVarDecl: func (vd: VariableDecl) {
-        /*
-        hash := ac_X31_hash(vd getName())
-        idx := reservedHashs indexOf(hash)
-        if(idx != -1) {
-            // same hash? compare length and then full-string comparison
-            word := reservedWords[idx]
-            if(word length() == vd getName() length() && word == vd getName()) {
-                params errorHandler onError(ReservedKeywordError new(vd token, "%s is a reserved C99 keyword, you can't use it in a variable declaration" format(vd getName())))
-            }
-        }
-        */
-
         match (node := peek(Object)) {
             case sDecl: StructDecl =>
                 sDecl fields add(vd)
@@ -313,10 +301,7 @@ AstBuilder: class {
                     vd := stmt as VariableDecl
                     node as Module addVariable(vd)
                 } else {
-                    // We have a decision to make here
-                    // Can we add stray code to the module or just functions structures and variable declarations?
-                    //module := node as Module
-                    //module body add(stmt)
+                    "Whatdafuck" pritnln()
                 }
             /*
             case node instanceOf?(ArrayLiteral) =>
@@ -415,7 +400,7 @@ AstBuilder: class {
      * Arguments
      */
     onVarArg: unmangled(onVarArg) func (name: CString) {
-        //peek(List<Node>) add(VarArg new(token(), name ? name toString() : null))
+        peek(List<Node>) add(VariableDecl new(name, VarArgType new(token()), token()))
     }
 
     onTypeArg: unmangled(onTypeArg) func (type: Type) {
@@ -647,7 +632,6 @@ setTokenPositionPointer: unmangled func (this: AstBuilder, tokenPos: Int*) { thi
 // string handling
 StringClone: unmangled func (string: CString) -> CString             { string clone() }
 mangleIdents: unmangled func (string: CString) -> CString            {
-    if(string == "this") return "_this" toCString()
     string
 }
 trailingQuest: unmangled func (string: CString) -> CString           { (string toString() + "__quest") toCString() }

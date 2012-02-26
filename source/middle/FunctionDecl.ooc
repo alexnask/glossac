@@ -28,7 +28,7 @@ FunctionDecl: class extends Decl {
                 last := body list last()
                 if(!last instanceOf?(Return)) {
                     if(!last instanceOf?(Expression)) resolver fail("Function %s does not return and an autoreturn cannot be determined" format(name), token)
-                    else if(last as Expression getType() name != returnType name) resolver fail("Expression cannot be used as function's %s autoreturn, types do not match" format(name), last token)
+                    else if(last as Expression getType() name != returnType name) resolver fail("Expression cannot be used as function's %s autoreturn, types do not match (expected %s, got %s)" format(name, returnType name, last as Expression getType() name), last token)
                     else {
                         // Correct autoreturn :D
                         last = Return new(last as Expression, last token)
