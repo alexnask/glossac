@@ -1,6 +1,6 @@
 import structs/Stack
 import ../frontend/Token
-import Module,FunctionDecl,StructDecl,VariableDecl,Node,Scope,Type,FunctionDecl
+import Module,FunctionDecl,StructDecl,VariableDecl,Node,Scope,Type,FunctionDecl,Loop
 
 Resolver: class {
     parents := Stack<Node> new()
@@ -116,6 +116,16 @@ Resolver: class {
         while(iter hasPrev?()) {
             node := iter prev() as Node
             if(node instanceOf?(FunctionDecl)) return node as FunctionDecl
+        }
+        null
+    }
+
+    // Get the current loop we are in, if any
+    getCurrentLoop: func -> Loop {
+        iter := parents backIterator()
+        while(iter hasPrev?()) {
+            node := iter prev() as Node
+            if(node instanceOf?(Loop)) return node as Loop
         }
         null
     }

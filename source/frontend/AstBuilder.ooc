@@ -1,7 +1,7 @@
 import io/File, text/[EscapeSequence]
 import structs/[ArrayList, List, Stack, HashMap]
 import ../middle/[Module,Expression,StructDecl,FunctionCall,FunctionDecl,Statement,Statement,Type,VariableAccess,VariableDecl,Node,Scope,If,Conditional,
-       Else,Return,IntLiteral,CharLiteral,StringLiteral,ArrayAccess,BoolLiteral,FloatLiteral,Loop,While]
+       Else,Return,IntLiteral,CharLiteral,StringLiteral,ArrayAccess,BoolLiteral,FloatLiteral,Loop,While,FlowControl]
 import Token
 
 parse: extern proto func (AstBuilder, CString) -> Int
@@ -12,7 +12,6 @@ RangeLiteral: class {}
 Cast: class {}
 
 Foreach: class {}
-FlowControl: class {}
 
 Comparison: class {}
 UnaryOp: class {}
@@ -387,13 +386,11 @@ AstBuilder: class {
     }
 
     onBreak: unmangled(onBreak) func -> FlowControl {
-        null
-        //FlowControl new(FlowAction _break, token())
+        FlowControl new(FlowAction _break, token())
     }
 
     onContinue: unmangled(onContinue) func -> FlowControl {
-        null
-        //FlowControl new(FlowAction _continue, token())
+        FlowControl new(FlowAction _continue, token())
     }
 
     onEquals: unmangled(onEquals) func (left, right: Expression) -> Comparison {
