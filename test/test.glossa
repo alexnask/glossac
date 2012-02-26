@@ -29,8 +29,9 @@
 Δομή other
 Τέλος
 
+// Unicode characters not valid yet :/
 Συνάρτηση b : char
-    'a'
+    '\n'
 Τέλος
 
 // Unicode identifiers not valid yet :/

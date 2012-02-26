@@ -2,6 +2,14 @@ import Expression,FunctionDecl,Statement,Resolver,StructDecl
 import ../frontend/Token
 import structs/ArrayList
 
+operator== (left,right: Type) -> Bool {
+    (left refLevel() == right refLevel() && left pointerLevel() == right pointerLevel() && left dereference() name == right dereference() name)
+}
+
+operator!= (left,right: Type) -> Bool {
+    !(left == right)
+}
+
 Type: class extends Statement {
     name: String
     ref: StructDecl = null // The structure the type was defined in
