@@ -1,13 +1,12 @@
 import io/File, text/[EscapeSequence]
 import structs/[ArrayList, List, Stack, HashMap]
-import ../middle/[Module,Expression,StructDecl,FunctionCall,FunctionDecl,Statement,Statement,Type,VariableAccess,VariableDecl,Node,Scope,If,Conditional,Else,Return,IntLiteral]
+import ../middle/[Module,Expression,StructDecl,FunctionCall,FunctionDecl,Statement,Statement,Type,VariableAccess,VariableDecl,Node,Scope,If,Conditional,Else,Return,IntLiteral,CharLiteral]
 import Token
 
 parse: extern proto func (AstBuilder, CString) -> Int
 
 StringLiteral: class {}
 FloatLiteral: class {}
-CharLiteral: class {}
 BoolLiteral: class {}
 NullLiteral: class {}
 RangeLiteral: class {}
@@ -258,8 +257,7 @@ AstBuilder: class {
     }
 
     onCharLiteral: unmangled(onCharLiteral) func (value: CString) -> CharLiteral {
-        null
-        //CharLiteral new(value toString(), token())
+        CharLiteral new(value toString(), token())
     }
 
     // statement

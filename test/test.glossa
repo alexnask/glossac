@@ -29,10 +29,8 @@
 Δομή other
 Τέλος
 
-whatever: char
-
 Συνάρτηση b : char
-    whatever
+    'a'
 Τέλος
 
 // Unicode identifiers not valid yet :/
