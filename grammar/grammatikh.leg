@@ -358,7 +358,7 @@ StructDecl = (
             STRUCT_KW -
             structName:IDENT { tokenPos; onStructStart(core->this, structName) }
             # modifiers
-            (- ( externName: ExternName { onStructExtern(core->this, externName) } # TODO: New StructExtern rule that allows for spaces, stars etc.
+            (- ( externName: StructExternName { onStructExtern(core->this, externName) } 
                 )
             )*
             - EOL
@@ -379,7 +379,13 @@ StructDecl = (
 ExternName = EXTERN_KW { $$="" }
               (
               - '('
-              - < [A-Za-z_] [A-Za-z0-9_]* > { $$=yytext } # is that correct? should it be $$=$$? what's happening?
+              - < [A-Za-z_] [A-Za-z0-9_]* > { $$=yytext }
+              - ')'
+              )?
+StructExternName = EXTERN_KW { $$="" }
+              (
+              - '('
+              - < [A-Za-z_]* (-)? [A-Za-z0-9_]* > { $$=yytext }
               - ')'
               )?
 
@@ -448,7 +454,7 @@ FuncType  = funcType:FuncTypeCore
             ("..." - { onFuncTypeVarArg(core->this, funcType); })?
             - ')'
             )?
-            (- '->'
+            (- ':'
              - returnType:Type { onFuncTypeReturnType(core->this, funcType, returnType); }
             )?
             { $$=funcType; }

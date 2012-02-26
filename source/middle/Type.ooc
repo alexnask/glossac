@@ -128,7 +128,7 @@ ArrayType: class extends PointerType {
     }
     
     toString: func -> String {
-        baseType toString() + "[]"
+        (inner) ? baseType toString() + "[%s]" format(inner toString()) : baseType toString() + "[]"
     }
 }
 

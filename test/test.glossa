@@ -8,6 +8,9 @@
 Δομή int εξωτερική
 Τέλος
 
+Δομή uint εξωτερική(unsigned int)
+Τέλος
+
 Δομή void εξωτερική
 Τέλος
 
@@ -40,5 +43,15 @@ whatever: char
         Γύρνα arg.a
     Τέλος
     a(arg)
+Τέλος
+
+Συνάρτηση fib (iter: int) : int
+    /*
+    Αν iter <= 1 τότε
+        Γύρνα iter
+    Τέλος
+    fib(iter - 1) + fib(iter - 2)
+    */
+    0
 Τέλος
 

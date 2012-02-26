@@ -1,12 +1,11 @@
 import io/File, text/[EscapeSequence]
 import structs/[ArrayList, List, Stack, HashMap]
-import ../middle/[Module,Expression,StructDecl,FunctionCall,FunctionDecl,Statement,Statement,Type,VariableAccess,VariableDecl,Node,Scope,If,Conditional,Else,Return]
+import ../middle/[Module,Expression,StructDecl,FunctionCall,FunctionDecl,Statement,Statement,Type,VariableAccess,VariableDecl,Node,Scope,If,Conditional,Else,Return,IntLiteral]
 import Token
 
 parse: extern proto func (AstBuilder, CString) -> Int
 
 StringLiteral: class {}
-IntLiteral: class {}
 FloatLiteral: class {}
 CharLiteral: class {}
 BoolLiteral: class {}
@@ -448,23 +447,19 @@ AstBuilder: class {
     }
 
     onDecLiteral: unmangled(onDecLiteral) func (value: CString) -> IntLiteral {
-        null
-        //IntLiteral new(value toString() replaceAll("_", "") toLLong(), token())
+        IntLiteral new(value toString() replaceAll("_", "") toLLong(), token())
     }
 
     onOctLiteral: unmangled(onOctLiteral) func (value: CString) -> IntLiteral {
-        null
-        //IntLiteral new(value toString() replaceAll("_", "") substring(2) toLLong(8), token())
+        IntLiteral new(value toString() replaceAll("_", "") substring(2) toLLong(8), token())
     }
 
     onBinLiteral: unmangled(onBinLiteral) func (value: CString) -> IntLiteral {
-        null
-        //IntLiteral new(value toString() replaceAll("_", "") substring(2) toLLong(2), token())
+        IntLiteral new(value toString() replaceAll("_", "") substring(2) toLLong(2), token())
     }
 
     onHexLiteral: unmangled(onHexLiteral) func (value: CString) -> IntLiteral {
-        null
-        //IntLiteral new(value toString() replaceAll("_", "") toLLong(16), token())
+        IntLiteral new(value toString() replaceAll("_", "") toLLong(16), token())
     }
 
     onFloatLiteral: unmangled(onFloatLiteral) func (value: CString) -> FloatLiteral {
