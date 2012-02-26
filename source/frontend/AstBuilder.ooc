@@ -10,7 +10,6 @@ NullLiteral: class {}
 RangeLiteral: class {}
 
 Cast: class {}
-Block: class {}
 
 Foreach: class {}
 While: class {}
@@ -290,6 +289,8 @@ AstBuilder: class {
                 } else {
                     "Whatdafuck" println()
                 }
+            case node instanceOf?(Scope) =>
+                node as Scope add(stmt)
             case =>
                 "[gotStatement] Got a %s, don't know what to do with it, parent = %s\n" printfln(stmt toString(), node class name)
         }
@@ -319,14 +320,13 @@ AstBuilder: class {
         //return Cast new(expr, type, token())
     }
 
-    // block {}
+    // A block is simply a Scope, used for local variable declarations etc
     onBlockStart: unmangled(onBlockStart) func {
-        //stack push(Block new(token()))
+        stack push(Scope new())
     }
 
-    onBlockEnd: unmangled(onBlockEnd) func -> Block {
-        null
-        //pop(Block)
+    onBlockEnd: unmangled(onBlockEnd) func -> Scope {
+        pop(Scope)
     }
 
     // if

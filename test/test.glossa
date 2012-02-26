@@ -52,6 +52,9 @@ other : char[][][]
 Συνάρτηση fib (iter: int) : uint
     d <- other[0,0] : char[]
     e <- other[0][0] : char[] // These statements are equivalent
+    {
+        d <- 2 : int
+    }
     Αν αληθής τότε
         fib(ψευδής)
     Τέλος
