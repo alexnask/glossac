@@ -49,10 +49,22 @@ Type: class extends Statement {
         level
     }
 
-    dereference: func -> Type {
+    arrayLevel: func -> SSizeT {
+        level := 0
         type := clone()
-        while(type pointer?() || type array?()) {
+        while(type array?()) {
+            level += 1
+            type = type as ArrayType baseType
+        }
+        level
+    }
+
+    dereference: func(levels : Int = -1) -> Type {
+        if(levels == -1) levels = refLevel()
+        type := clone()
+        while(levels > 0 && (type pointer?() || type array?())) {
             type = type as PointerType baseType
+            levels -= 1
         }
         type
     }
@@ -134,9 +146,14 @@ ArrayType: class extends PointerType {
         resolver pop(this)
         resolved? = true
     }
-    
+
     toString: func -> String {
-        (inner) ? baseType toString() + "[%s]" format(inner toString()) : baseType toString() + "[]"
+        match(inner) {
+            case null =>
+                "%s[]" format(baseType toString())
+            case =>
+                "%s[%s]" format(baseType toString(), inner toString())
+        }
     }
 }
 
@@ -159,7 +176,7 @@ FuncType: class extends Type {
     }
     
     resolve: func(resolver: Resolver) {
-        // To resolve a function type, we need to resolve evrey argument's type and its return type
+        // To resolve a function type, we need to resolve every argument's type and its return type
         // TODO: sould i push to the resolver here?
         argumentTypes each(|arg|
             arg resolve(resolver)
@@ -177,7 +194,7 @@ FuncType: class extends Type {
             ret += arg toString()
         }
         ret += ")"
-        if(returnType) ret += " -> " + returnType toString()
+        if(returnType) ret += " : " + returnType toString()
         ret
     }
 }

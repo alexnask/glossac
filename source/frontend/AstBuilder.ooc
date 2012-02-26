@@ -1,6 +1,6 @@
 import io/File, text/[EscapeSequence]
 import structs/[ArrayList, List, Stack, HashMap]
-import ../middle/[Module,Expression,StructDecl,FunctionCall,FunctionDecl,Statement,Statement,Type,VariableAccess,VariableDecl,Node,Scope,If,Conditional,Else,Return,IntLiteral,CharLiteral,StringLiteral]
+import ../middle/[Module,Expression,StructDecl,FunctionCall,FunctionDecl,Statement,Statement,Type,VariableAccess,VariableDecl,Node,Scope,If,Conditional,Else,Return,IntLiteral,CharLiteral,StringLiteral,ArrayAccess]
 import Token
 
 parse: extern proto func (AstBuilder, CString) -> Int
@@ -10,7 +10,6 @@ BoolLiteral: class {}
 NullLiteral: class {}
 RangeLiteral: class {}
 
-ArrayAccess: class {}
 Cast: class {}
 Block: class {}
 
@@ -284,14 +283,12 @@ AstBuilder: class {
             case node instanceOf?(Conditional) =>
                 cStmt := node as Conditional
                 cStmt body add(stmt)
-            /*
             case node instanceOf?(ArrayAccess) =>
                 aa := node as ArrayAccess
                 if(!stmt instanceOf?(Expression)) {
-                    params errorHandler onError(SyntaxError new(stmt token, "Expected an expression here, not a statement!"))
+                    Exception new(token() formatMessage("[ERROR]: ", "Expected an expression here, not a statement!")) throw()
                 }
                 aa indices add(stmt as Expression)
-            */
             case node instanceOf?(Module) =>
                 if(stmt instanceOf?(VariableDecl)) {
                     vd := stmt as VariableDecl
@@ -314,12 +311,11 @@ AstBuilder: class {
     }
 
     onArrayAccessStart: unmangled(onArrayAccessStart) func (array: Expression) {
-        //stack push(ArrayAccess new(array, token()))
+        stack push(ArrayAccess new(array, token()))
     }
 
-    onArrayAccessEnd: unmangled(onArrayAccessEnd) func () -> ArrayAccess {
-        null
-        //pop(ArrayAccess)
+    onArrayAccessEnd: unmangled(onArrayAccessEnd) func -> ArrayAccess {
+        pop(ArrayAccess)
     }
 
     // return

@@ -26,8 +26,7 @@
     c: char
 Τέλος
 
-Δομή other
-Τέλος
+other : char[][][]
 
 // Unicode characters not valid yet :/
 Συνάρτηση b : char
@@ -45,6 +44,8 @@
 Τέλος
 
 Συνάρτηση fib (iter: int) : int
+    d <- other[0,0] : char[]
+    e <- other[0][0] : char[] // These statements are equivalent
     /*
     Αν iter <= 1 τότε
         Γύρνα iter

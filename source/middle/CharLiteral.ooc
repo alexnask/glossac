@@ -3,6 +3,7 @@ import ../frontend/Token
 
 CharLiteral: class extends Expression {
     value: String = null
+    type := static Type new("char", nullToken)
 
     init: func(=value,=token)
     clone: func -> This {
@@ -10,7 +11,15 @@ CharLiteral: class extends Expression {
     }
 
     getType: func -> Type {
-        Type new("char",nullToken)
+        type
+    }
+
+    resolve: func(resolver: Resolver) {
+        if(resolved?) return
+        resolver push(this)
+        type resolve(resolver)
+        resolver pop(this)
+        resolved? = true
     }
 
     toString: func -> String {
