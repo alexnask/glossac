@@ -22,7 +22,6 @@ FunctionCall: class extends Expression {
         resolver push(this)
         // Resolve argument expressions
         args each(|arg|
-            if(arg resolved?) return
             arg resolve(resolver)
         )
         // Find the function declaration
@@ -65,7 +64,7 @@ FunctionCall: class extends Expression {
         if(args getSize() != fd arguments getSize()) return false
         if(fd arguments getSize() > 0) {
             for(i in 0 .. fd arguments getSize()) {
-                if(fd arguments get(i) type trimPointers() name != args get(i) getType() trimPointers() name) return false
+                if(fd arguments get(i) type trimPointers() != args get(i) getType() trimPointers()) return false
                 args[i] = args get(i) pointerize(fd arguments get(i) type pointerLevel() - args get(i) getType() pointerLevel())
             }
         }

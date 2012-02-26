@@ -678,7 +678,7 @@ ValueCore =
         | v:VariableAccess                                 { tokenPos; $$=onVarAccess(core->this, NULL, v); }
         )
 
-BREAK_KW     = "κόψε"
+BREAK_KW     = "σταμάτα"
 CONTINUE_KW  = "συνέχισε"
 RETURN_KW    = "Γύρνα"
 END_KW       = "Τέλος"

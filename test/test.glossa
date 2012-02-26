@@ -46,6 +46,9 @@ other : char[][][]
 Συνάρτηση fib (iter: int) : uint
     d <- other[0,0] : char[]
     e <- other[0][0] : char[] // These statements are equivalent
+    Αν αληθής τότε
+        fib(ψευδής)
+    Τέλος
     /*
     Αν iter <= 1 τότε
         Γύρνα iter

@@ -88,7 +88,9 @@ Type: class extends Statement {
     }
 
     clone: func -> This {
-        Type new(name,token)
+        c := Type new(name,token)
+        c ref = ref
+        c
     }
 
     resolve: func(resolver: Resolver) {
