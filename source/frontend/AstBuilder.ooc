@@ -1,11 +1,11 @@
 import io/File, text/[EscapeSequence]
 import structs/[ArrayList, List, Stack, HashMap]
-import ../middle/[Module,Expression,StructDecl,FunctionCall,FunctionDecl,Statement,Statement,Type,VariableAccess,VariableDecl,Node,Scope,If,Conditional,Else,Return,IntLiteral,CharLiteral,StringLiteral,ArrayAccess,BoolLiteral]
+import ../middle/[Module,Expression,StructDecl,FunctionCall,FunctionDecl,Statement,Statement,Type,VariableAccess,VariableDecl,Node,Scope,If,Conditional,
+       Else,Return,IntLiteral,CharLiteral,StringLiteral,ArrayAccess,BoolLiteral,FloatLiteral]
 import Token
 
 parse: extern proto func (AstBuilder, CString) -> Int
 
-FloatLiteral: class {}
 NullLiteral: class {}
 RangeLiteral: class {}
 
@@ -102,8 +102,7 @@ AstBuilder: class {
             vars each(|var| var externName = "")
         } else {
             if(vars getSize() != 1) {
-                //params errorHandler onError(SyntaxError new(token(), "Trying to set an extern name on several variables at once!"))
-                "Trying to set an extern name on several variables at once!" println()
+                Exception new(token() formatMessage("[ERROR]: ", "Trying to set an extern name on several variables at once!")) throw()
             }
             vars peek() externName = cexternName toString()
         }
@@ -442,8 +441,7 @@ AstBuilder: class {
     }
 
     onFloatLiteral: unmangled(onFloatLiteral) func (value: CString) -> FloatLiteral {
-        null
-        //FloatLiteral new(value toString() replaceAll("_", ""), token())
+        FloatLiteral new(value toString() replaceAll("_", "") toFloat(), token())
     }
 
     onBoolLiteral: unmangled(onBoolLiteral) func (value: Bool) -> BoolLiteral {
