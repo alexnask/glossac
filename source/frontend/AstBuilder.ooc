@@ -78,10 +78,6 @@ AstBuilder: class {
         peek(StructDecl) externName = name toString()
     }
 
-    onStructBody: unmangled(onStructBody) func {
-        // Ignore for now
-    }
-
     onStructEnd: unmangled(onStructEnd) func {
         pop(StructDecl)
     }

@@ -110,7 +110,6 @@ void onImport (void *this, char *path, char *name);
 
 void onStructStart(void *this, char *name);
 void onStructExtern(void *this, char *externName);
-void onStructBody(void *this);
 void onStructEnd(void *this);
 
 void onVarDeclStart(void *this);
@@ -362,7 +361,6 @@ StructDecl = (
                 )
             )*
             - EOL
-            { onStructBody(core->this); }
 
             (-
                 # structdecl contents
