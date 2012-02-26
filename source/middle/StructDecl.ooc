@@ -12,6 +12,7 @@ StructDecl: class extends Decl {
 
     number?: func -> Bool {
         if(isextern?()) {
+            // Note that we do not test for specific glossa types, but we check for the extern type of the structure decl against C types known to be numbers. This way, you can write your own structures from number types and use them with all their implicit casting etc. capabilities
             extName := (externName != "") ? externName : type name
             return (extName == "int" || extName == "long" || extName == "long long" || extName == "char" || extName == "_Bool" || extName == "short" || extName == "unsigned int" || extName == "unsigned short" || extName == "unsigned long" || extName == "unsigned long long" || extName == "unsigned char" || extName == "unsigned" || extName == "signed char" || extName == "float" || extName == "double" || extName == "long double")
         }
