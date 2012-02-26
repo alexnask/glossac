@@ -296,15 +296,6 @@ AstBuilder: class {
                 } else {
                     "Whatdafuck" println()
                 }
-            /*
-            case node instanceOf?(ArrayLiteral) =>
-                arrayLit := node as ArrayLiteral
-                if(!stmt instanceOf?(Expression)) {
-                    params errorHandler onError(SyntaxError new(stmt token, "Expected an expression here, not a statement!"))
-                }
-                arrayLit getElements() add(stmt as Expression)
-            */
-            // TODO: Add structure handling
             case =>
                 "[gotStatement] Got a %s, don't know what to do with it, parent = %s\n" printfln(stmt toString(), node class name)
         }

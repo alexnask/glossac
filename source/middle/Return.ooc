@@ -19,7 +19,7 @@ Return: class extends Statement {
             expr resolve(resolver)
         }
         if(ref returnType && ref returnType != Type _void) {
-            if(!expr || expr getType() name != ref returnType name) resolver fail("Return statements should only take expressions of the same type as the return type of the function declaration (expected %s, got %s)" format(ref returnType toString(), expr getType() toString()), expr token)
+            if(!expr || expr getType() != ref returnType) resolver fail("Return statements should only take expressions of the same type as the return type of the function declaration (expected %s, got %s)" format(ref returnType toString(), expr getType() toString()), expr token)
         } else {
             if(expr) resolver fail("Return statements should not take expressions in a function of void return type", expr token)
         }

@@ -43,7 +43,7 @@ other : char[][][]
     a(arg)
 Τέλος
 
-Συνάρτηση fib (iter: int) : int
+Συνάρτηση fib (iter: int) : uint
     d <- other[0,0] : char[]
     e <- other[0][0] : char[] // These statements are equivalent
     /*

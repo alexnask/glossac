@@ -2,8 +2,9 @@ import Expression,FunctionDecl,Statement,Resolver,StructDecl
 import ../frontend/Token
 import structs/ArrayList
 
+// This is not strictly equality. operator== first checks wether the types are equivalent (same name and reference and pointer levels) and then checks to see if the types are compatible, meaning that implicit casts can be done between them :D
 operator== (left,right: Type) -> Bool {
-    (left refLevel() == right refLevel() && left pointerLevel() == right pointerLevel() && left dereference() name == right dereference() name)
+    (left refLevel() == right refLevel() && left pointerLevel() == right pointerLevel() && left dereference() name == right dereference() name) || Type compatible?(left,right)
 }
 
 operator!= (left,right: Type) -> Bool {
@@ -75,6 +76,11 @@ Type: class extends Statement {
             type = type as PointerType baseType
         }
         type
+    }
+
+    // Returns true if the two types are compatible, meaning that implicit casts are possible betwwen values of those types :D
+    compatible?: func(other: Type) -> Bool {
+        (number?() && other number?())
     }
 
     toString: func -> String {
