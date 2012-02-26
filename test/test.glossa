@@ -1,6 +1,8 @@
 Χρήση woot
 Εισήγαγε path/[one,two]
 //TODO: Fix them unicode problems :/
+//TODO: How do we know the type of the operator expressions? Maybe add some primitive type of overlaoding?
+// Or should they be defined in the compiler's source for "base" types (numbers, characters, strings, ...)
 
 // Note that all types are declared as structures, even those wich are really not in C.
 Δομή int εξωτερική
@@ -10,6 +12,9 @@
 Τέλος
 
 Δομή char εξωτερική
+Τέλος
+
+Δομή bool εξωτερική(_Bool)
 Τέλος
 
 Δομή test
@@ -26,7 +31,9 @@
     Αν arg.a τότε
         arg.b
     Αλλιώς Αν arg.a τότε
-        arg.d
+        arg.c
+    Αλλιώς
+        arg.a
     Τέλος
 Τέλος
 

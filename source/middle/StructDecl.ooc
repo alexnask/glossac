@@ -9,7 +9,15 @@ StructDecl: class extends Decl {
     init: func(name: String,=token) {
         type = Type new(name,token)
     }
-    
+
+    number?: func -> Bool {
+        if(isextern?()) {
+            extName := (externName != "") ? externName : type name
+            return (extName == "int" || extName == "long" || extName == "long long" || extName == "char" || extName == "_Bool" || extName == "short" || extName == "unsigned int" || extName == "unsigned short" || extName == "unsigned long" || extName == "unsigned long long" || extName == "unsigned char" || extName == "unsigned" || extName == "signed char" || extName == "float" || extName == "double" || extName == "long double")
+        }
+        false
+    }
+
     clone: func -> This {
         c := StructDecl new(type name,token)
         fields each(|field|

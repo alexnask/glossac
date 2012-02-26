@@ -499,6 +499,7 @@ Else    = (
           - Body
                          { $$=onIfEnd(core->this); onStatement(core->this,$$); }
           )?
+
           ( - EOL )?
           - Body
           )              { $$=onElseEnd(core->this); }
@@ -771,7 +772,7 @@ DEC_LIT      = < "-"? [0-9] [0-9_]* >                   -
 
 IDENT        = i:IDENT_CORE -
 IDENT_CORE   = !(KW ![_A-Za-z0-9])  # a keyword is not an ident
-               < [_a-zA-ZͰ-Ͽ][_0-9a-zA-ZͰ-Ͽ]* > { $$=yytext; }
+               < [_a-zA-Z][_0-9a-zA-Z]* > { $$=yytext; }
                ( '?' { $$=trailingQuest($$); }
                | '!' { $$=trailingBang($$); })?
                

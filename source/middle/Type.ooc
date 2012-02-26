@@ -6,17 +6,21 @@ Type: class extends Statement {
     name: String
     ref: StructDecl = null // The structure the type was defined in
     init: func(=name,=token)
-    
+
     _void := static This new("void", nullToken) // Void type wich is the default return type of a function
-    
+
     pointer?: func -> Bool {
         instanceOf?(PointerType) && !instanceOf?(ArrayType)
     }
-    
+
     array?: func -> Bool {
         instanceOf?(ArrayType)
     }
-    
+
+    number?: func -> Bool {
+        (ref) ? ref number?() : false
+    }
+
     refLevel: func -> SSizeT { // Function that returns the level of the pointerization of the type
         level := 0
         type := clone()
@@ -26,7 +30,7 @@ Type: class extends Statement {
         }
         level
     }
-    
+
     pointerLevel: func -> SSizeT {
         level := 0
         type := clone()
@@ -36,7 +40,7 @@ Type: class extends Statement {
         }
         level
     }
-    
+
     dereference: func -> Type {
         type := clone()
         while(type pointer?() || type array?()) {
@@ -44,7 +48,7 @@ Type: class extends Statement {
         }
         type
     }
-    
+
     trimPointers: func -> Type {
         type := clone()
         while(type pointer?()) {
@@ -52,15 +56,15 @@ Type: class extends Statement {
         }
         type
     }
-    
+
     toString: func -> String {
         name
     }
-    
+
     clone: func -> This {
         Type new(name,token)
     }
-    
+
     resolve: func(resolver: Resolver) {
         // Nothing will change in the type itself after resolving. However, in glossa all types (but function types and the vararg type) are defined through structures, even "base" types like void, int, float, etc..
         // So resolving is just a metter of finding a structure declarataion that matches the type's name
