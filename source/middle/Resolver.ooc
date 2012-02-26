@@ -110,6 +110,16 @@ Resolver: class {
         null
     }
 
+    // Gets the current function declaration we are in, if any
+    getCurrentFunctionDecl: func -> FunctionDecl {
+        iter := parents backIterator()
+        while(iter hasPrev?()) {
+            node := iter prev() as Node
+            if(node instanceOf?(FunctionDecl)) return node as FunctionDecl
+        }
+        null
+    }
+
     push: func(node: Node) {
         parents push(node)
     }

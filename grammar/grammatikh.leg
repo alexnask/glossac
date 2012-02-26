@@ -266,7 +266,7 @@ enum Error {
 
 Module  =  ModuleCore
           | WS ( !EOL . )*
-          EOL { tokenPos; char *message = "Expected include, import, statement or declaration\n";
+          EOL { tokenPos; char *message = "Expected use, import or declaration\n";
             if(G->buf[core->token[0]] == _CBRACK) { message = "Unmatched closing bracket"; }
             error(core->this, EXP_INC_IMP_STMT_OR_DECL, message, core->token[0]);
           }
@@ -275,7 +275,6 @@ ModuleCore =
           ( WS Import WS
           | WS Use WS
           | WS Decl WS
-          | WS stmt:Stmt WS { onStatement(core->this, stmt) }
           )
 
 Use = USE_KW [ \t]

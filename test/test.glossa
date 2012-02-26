@@ -26,14 +26,21 @@
 Δομή other
 Τέλος
 
-// π and above -> invalid identifier
-Συνάρτηση α (arg: test*) : int
+whatever: char
+
+Συνάρτηση b : char
+    whatever
+Τέλος
+
+// Unicode identifiers not valid yet :/
+Συνάρτηση a (arg: test*) : int
     Αν arg.a τότε
-        arg.b
+        arg.a
     Αλλιώς Αν arg.a τότε
         arg.c
     Αλλιώς
         arg.a
     Τέλος
+    a(arg)
 Τέλος
 

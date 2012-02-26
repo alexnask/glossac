@@ -1,5 +1,5 @@
 import structs/ArrayList
-import Node,Resolver,Type,Scope,Decl,VariableDecl
+import Node,Resolver,Type,Scope,Decl,VariableDecl,Return,Expression
 
 FunctionDecl: class extends Decl {
     name: String
@@ -11,18 +11,34 @@ FunctionDecl: class extends Decl {
 
     resolve: func(resolver: Resolver) {
         if(resolved?) return
-        
+
         resolver push(this)
         if(resolver checkRootSymbolRedifinition(name,this)) resolver fail("Redifinition of function " + name, token)
 
-        if(returnType) {
-            returnType resolve(resolver)
-        }
+        if(returnType) returnType resolve(resolver)
+
         for(argument in arguments) {
             argument resolve(resolver)
         }
         if(isextern?() && body && body list getSize() > 0) resolver fail("Extern function " + name + " can't have a function body", body token)
-        if(body) body resolve(resolver)
+        if(body) {
+            body resolve(resolver)
+            // Ok all is good up to now, so we should determine if the function returns as it should or wether we need to make an autoreturn happen
+            if(returnType && returnType != Type _void) {
+                last := body list last()
+                if(!last instanceOf?(Return)) {
+                    if(!last instanceOf?(Expression)) resolver fail("Function %s does not return and an autoreturn cannot be determined" format(name), token)
+                    else if(last as Expression getType() name != returnType name) resolver fail("Expression cannot be used as function's %s autoreturn, types do not match" format(name), last token)
+                    else {
+                        // Correct autoreturn :D
+                        last = Return new(last as Expression, last token)
+                        last resolve(resolver)
+                        body list set(body list lastIndex(),last)
+                    }
+                }
+            }
+        }
+
         resolved? = true
         resolver pop(this)
     }

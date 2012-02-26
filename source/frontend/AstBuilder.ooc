@@ -1,6 +1,6 @@
 import io/File, text/[EscapeSequence]
 import structs/[ArrayList, List, Stack, HashMap]
-import ../middle/[Module,Expression,StructDecl,FunctionCall,FunctionDecl,Statement,Statement,Type,VariableAccess,VariableDecl,Node,Scope,If,Conditional,Else]
+import ../middle/[Module,Expression,StructDecl,FunctionCall,FunctionDecl,Statement,Statement,Type,VariableAccess,VariableDecl,Node,Scope,If,Conditional,Else,Return]
 import Token
 
 parse: extern proto func (AstBuilder, CString) -> Int
@@ -14,7 +14,6 @@ NullLiteral: class {}
 RangeLiteral: class {}
 
 ArrayAccess: class {}
-Return: class {}
 Cast: class {}
 Block: class {}
 
@@ -344,8 +343,7 @@ AstBuilder: class {
 
     // return
     onReturn: unmangled(onReturn) func (expr: Expression) -> Return {
-        null
-        //Return new(expr, token())
+        Return new(expr, token())
     }
 
     // variable access

@@ -33,7 +33,6 @@ FunctionCall: class extends Expression {
         else resolver fail("Could not resolve function call " + name, token)
 
         resolved? = true
-        
     }
     
     // Because glossa is not a polymorphic language, the matching is relatively simple
@@ -51,17 +50,24 @@ FunctionCall: class extends Expression {
     matches?: func(fd: FunctionDecl) -> Bool {
         if(!fd) return false
         // Varargs should only be the last argument type of a function
-        if(fd arguments last() type instanceOf?(VarArgType)) {
-            if(args getSize() < fd arguments getSize() - 1) return false
-            for(i in 0 .. fd arguments getSize() - 1) {
-                if(fd arguments get(i) type trimPointers() != args get(i) getType() trimPointers()) return false
+        if(fd arguments getSize() > 0) {
+            if(fd arguments last() type instanceOf?(VarArgType)) {
+                if(args getSize() < fd arguments getSize() - 1) return false
+                if(fd arguments getSize() > 1) {
+                    for(i in 0 .. fd arguments getSize() - 1) {
+                        if(fd arguments get(i) type trimPointers() != args get(i) getType() trimPointers()) return false
+                        args[i] = args get(i) pointerize(fd arguments get(i) type pointerLevel() - args get(i) getType() pointerLevel())
+                    }
+                }
+                return true
+            }
+        }
+        if(args getSize() != fd arguments getSize()) return false
+        if(fd arguments getSize() > 0) {
+            for(i in 0 .. fd arguments getSize()) {
+                if(fd arguments get(i) type trimPointers() name != args get(i) getType() trimPointers() name) return false
                 args[i] = args get(i) pointerize(fd arguments get(i) type pointerLevel() - args get(i) getType() pointerLevel())
             }
-            return true
-        } else if(args getSize() != fd arguments getSize()) return false
-        for(i in 0 .. fd arguments getSize()) {
-            if(fd arguments get(i) type trimPointers() != args get(i) getType() trimPointers()) return false
-            args[i] = args get(i) pointerize(fd arguments get(i) type pointerLevel() - args get(i) getType() pointerLevel())
         }
         true
     }

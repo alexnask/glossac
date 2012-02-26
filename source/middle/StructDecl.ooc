@@ -5,7 +5,7 @@ StructDecl: class extends Decl {
     type: Type
     fields := ArrayList<VariableDecl> new()
     getType: func -> Type { type }
-    
+
     init: func(name: String,=token) {
         type = Type new(name,token)
     }
@@ -28,7 +28,7 @@ StructDecl: class extends Decl {
         c unmangledName = unmangledName
         c
     }
-    
+
     resolve: func(resolver: Resolver) {
         if(resolved?) return
 
@@ -42,7 +42,7 @@ StructDecl: class extends Decl {
         )
         resolver pop(this)
     }
-    
+
     toString: func -> String {
         ret := "Δομή "
         ret += type toString() + " "
