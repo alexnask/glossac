@@ -35,11 +35,9 @@ whatever: char
 // Unicode identifiers not valid yet :/
 Συνάρτηση a (arg: test*) : int
     Αν arg.a τότε
-        arg.a
-    Αλλιώς Αν arg.a τότε
-        arg.c
+        Γύρνα arg.a
     Αλλιώς
-        arg.a
+        Γύρνα arg.a
     Τέλος
     a(arg)
 Τέλος

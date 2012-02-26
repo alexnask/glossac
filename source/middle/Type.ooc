@@ -121,7 +121,7 @@ ArrayType: class extends PointerType {
         if(inner) {
             inner resolve(resolver)
             // Make sure the index passed in the brackets is a number
-            if(!inner getType() number?()) resolver fail("An array's index should be a number, got a %s" format(inner getType() name), token)
+            if(!inner getType() number?()) resolver fail("An array's index should be a number, got an expression of type %s" format(inner getType() name), token)
         }
         resolver pop(this)
         resolved? = true

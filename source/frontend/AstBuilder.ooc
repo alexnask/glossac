@@ -301,7 +301,7 @@ AstBuilder: class {
                     vd := stmt as VariableDecl
                     node as Module addVariable(vd)
                 } else {
-                    "Whatdafuck" pritnln()
+                    "Whatdafuck" println()
                 }
             /*
             case node instanceOf?(ArrayLiteral) =>
@@ -400,7 +400,7 @@ AstBuilder: class {
      * Arguments
      */
     onVarArg: unmangled(onVarArg) func (name: CString) {
-        peek(List<Node>) add(VariableDecl new(name, VarArgType new(token()), token()))
+        peek(List<Node>) add(VariableDecl new(name toString(), VarArgType new(token()), token()))
     }
 
     onTypeArg: unmangled(onTypeArg) func (type: Type) {
