@@ -526,7 +526,7 @@ Foreach = FOR_KW { tokenPos; }
 
 While = WHILE_KW { tokenPos; }
         - WS condition:Expr WS { onWhileStart(core->this, condition); }
-        - EOL
+        ( - EOL )?
         - Body
         - END_KW
         -            { $$=onWhileEnd(core->this); }
@@ -692,7 +692,7 @@ IF_KW        = "Αν"
 THEN_KW      = "τότε"
 ELSE_KW      = "Αλλιώς"
 FOR_KW       = "Για"
-WHILE_KW     = "Όσο"
+WHILE_KW     = "Οσο"
 AS_KW        = "ως"
 IN_KW        = "in"
 

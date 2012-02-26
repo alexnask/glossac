@@ -54,6 +54,9 @@ other : char[][][]
     e <- other[0][0] : char[] // These statements are equivalent
     {
         d <- 2 : int
+        Οσο αληθής
+            fib(0)
+        Τέλος
     }
     Αν αληθής τότε
         fib(ψευδής)

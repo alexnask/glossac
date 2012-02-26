@@ -1,7 +1,7 @@
 import io/File, text/[EscapeSequence]
 import structs/[ArrayList, List, Stack, HashMap]
 import ../middle/[Module,Expression,StructDecl,FunctionCall,FunctionDecl,Statement,Statement,Type,VariableAccess,VariableDecl,Node,Scope,If,Conditional,
-       Else,Return,IntLiteral,CharLiteral,StringLiteral,ArrayAccess,BoolLiteral,FloatLiteral]
+       Else,Return,IntLiteral,CharLiteral,StringLiteral,ArrayAccess,BoolLiteral,FloatLiteral,Loop,While]
 import Token
 
 parse: extern proto func (AstBuilder, CString) -> Int
@@ -12,7 +12,6 @@ RangeLiteral: class {}
 Cast: class {}
 
 Foreach: class {}
-While: class {}
 FlowControl: class {}
 
 Comparison: class {}
@@ -276,6 +275,9 @@ AstBuilder: class {
             case node instanceOf?(Conditional) =>
                 cStmt := node as Conditional
                 cStmt body add(stmt)
+            case node instanceOf?(Loop) =>
+                lStmt := node as Loop
+                lStmt body add(stmt)
             case node instanceOf?(ArrayAccess) =>
                 aa := node as ArrayAccess
                 if(!stmt instanceOf?(Expression)) {
@@ -365,12 +367,11 @@ AstBuilder: class {
 
     // while
     onWhileStart: unmangled(onWhileStart) func (condition: Expression) {
-        //stack push(While new(condition, token()))
+        stack push(While new(condition, token()))
     }
 
     onWhileEnd: unmangled(onWhileEnd) func -> While {
-        null
-        //pop(While)
+        pop(While)
     }
 
     /*
