@@ -2,8 +2,7 @@ import Loop, Expression, Type, Resolver, RangeLiteral, VariableDecl, VariableAcc
 import ../frontend/Token
 
 Foreach: class extends Loop {
-    decl,step: Expression = null
-    range: RangeLiteral = null
+    decl,step,range: Expression = null
     init: func(=decl,=range,=token)
     clone: func -> This {
         c := Foreach new(decl,range,token)
@@ -20,6 +19,7 @@ Foreach: class extends Loop {
         if(decl as VariableDecl expr != null) resolver fail("A foreach loop's variable declaration should not have a default value", decl token)
         else if(!decl getType() number?()) resolver fail("A foreach loop's variable declaration should be of a number type (got %s)" format(decl getType() toString()), decl token)
         range resolve(resolver)
+        if(range getType() != Type new("range",nullToken)) resolver fail("A foreach loop can only loop through a range (got %s)" format(range getType() toString()), token)
         if(step) {
             step resolve(resolver)
             if(!step getType() number?()) resolver fail("A foreach loop's step should be of a number type (got %s)" format(step getType() toString()), step token)

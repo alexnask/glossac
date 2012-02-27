@@ -58,23 +58,13 @@ other : char[][][]
 Τέλος
 
 Συνάρτηση fib (iter: int) : uint
-    Για i από 0 μέχρι 10
+    someRange <- 0 μέχρι 10 : range
+    Για i από someRange βήμα 2
         fib(i)
     Τέλος
     f <- null : char*
     d <- other[0,0] : char[]
     e <- other[0][0] : char[] // These statements are equivalent
-    {
-        d <- 2 : int
-        d <- (αληθής) ? 1.2 ως int mod d : ψευδής
-        Οσο e[0] = (-d ως char) και d = αληθής
-            Αν (αληθής) τότε
-                συνέχισε
-            Τέλος
-            σταμάτα
-            fib(0)
-        Τέλος
-    }
     Αν αληθής τότε
         fib(ψευδής)
     Τέλος

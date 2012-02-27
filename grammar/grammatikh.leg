@@ -518,7 +518,7 @@ ImplicitDecl = (v:VariableDecl { $$=v })
 Foreach = FOR_KW { tokenPos; }
           - WS decl:ImplicitDecl WS
           - IN_KW
-          - range:Range WS { onForeachStart(core->this, decl, range); }
+          - range:Expr WS { onForeachStart(core->this, decl, range); }
           ( - STEP_KW - step:Expr WS { onForeachStep(core->this, step); } )?
           ( - EOL )?
           - Body

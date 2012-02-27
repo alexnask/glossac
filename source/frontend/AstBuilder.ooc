@@ -335,7 +335,7 @@ AstBuilder: class {
     }
 
     // foreach
-    onForeachStart: unmangled(onForeachStart) func (decl: Expression, range: RangeLiteral) {
+    onForeachStart: unmangled(onForeachStart) func (decl,range: Expression) {
         if(decl instanceOf?(Stack)) {
             decl = decl as Stack<VariableDecl> pop()
         }
