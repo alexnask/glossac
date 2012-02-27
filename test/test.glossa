@@ -44,6 +44,9 @@ other : char[][][]
 
 // Unicode identifiers not valid yet :/
 Συνάρτηση a (arg: test*) : int
+    {
+        d <- 0 μέχρι 10 : range
+    }
     arg2: test**
     d <- (arg.a) ? arg : arg2@ : test*
     Αν arg.a < arg2.a τότε

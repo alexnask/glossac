@@ -1,25 +1,13 @@
-import Statement, Expression, Type, Resolver
+import Statement, Expression, Type, Resolver, Literal
 import ../frontend/Token
 
-StringLiteral: class extends Expression {
+StringLiteral: class extends Literal {
     value: String = null
-    type := static ArrayType new(Type new("char",nullToken))
+    type = ArrayType new(Type new("char",nullToken)) as Type
 
     init: func(=value,=token)
     clone: func -> This {
         StringLiteral new(value,token)
-    }
-
-    resolve: func(resolver: Resolver) {
-        if(resolved?) return
-        resolver push(this)
-        type resolve(resolver)
-        resolver pop(this)
-        resolved? = true
-    }
-
-    getType: func -> Type {
-        type as Type
     }
 
     toString: func -> String {

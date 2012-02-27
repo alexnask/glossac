@@ -1,25 +1,13 @@
-import Statement, Expression, Type, Resolver
+import Statement, Expression, Type, Resolver, Literal
 import ../frontend/Token
 
-BoolLiteral: class extends Expression {
+BoolLiteral: class extends Literal {
     value: Bool
-    type := static Type new("bool",nullToken)
+    type = Type new("bool",nullToken)
 
     init: func(=value,=token)
     clone: func -> This {
         BoolLiteral new(value,token)
-    }
-
-    resolve: func(resolver: Resolver) {
-        if(resolved?) return
-        resolver push(this)
-        type resolve(resolver)
-        resolver pop(this)
-        resolved? = true
-    }
-
-    getType: func -> Type {
-        type
     }
 
     toString: func -> String {

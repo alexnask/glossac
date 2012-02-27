@@ -170,6 +170,7 @@ void onElseStart(void *this);
 void *onElseEnd(void *this);
 
 void onForeachStart(void *this, void *decl, void *collec);
+void onForeachStep(void *this, void *step);
 void *onForeachEnd(void *this);
 
 void onWhileStart(void *this, void *condition);
@@ -517,8 +518,9 @@ ImplicitDecl = (v:VariableDecl { $$=v })
 Foreach = FOR_KW { tokenPos; }
           - WS decl:ImplicitDecl WS
           - IN_KW
-          - collec:Expr WS { onForeachStart(core->this, decl, collec); }
-          - EOL
+          - range:Range WS { onForeachStart(core->this, decl, range); }
+          ( - STEP_KW - step:Expr WS { onForeachStep(core->this, step); } )
+          ( - EOL )?
           - Body
           - END_KW
           -            { $$=onForeachEnd(core->this); }
@@ -545,6 +547,7 @@ Expr     =   v:VariableDecl -
 
 BinaryOperation = Assignment
 
+# TODO: Fix some cases where assign is mixed up with lesser than unary minus
 Assignment = l: Ternary
                 ( ASS            { tokenPos; }  WS   r: Ternary               { $$=l=onAssign(core->this, l, r); }
                 | ASS            { tokenPos; }  WS   r: Ternary ~{  missingOp("<-") }   { $$=l=onAssign(core->this, l, r); }
@@ -592,7 +595,7 @@ Inequality = l:Range
                 )*
 
 Range   = l:Shift
-                ( DOUBLE_DOT  { tokenPos; } WS  r:Shift               ~{  missingOp("..") } { $$=l=onRangeLiteral(core->this, l, r); }
+                ( TIL_KW  { tokenPos; } WS  r:Shift               ~{  missingOp("μέχρι") } { $$=l=onRangeLiteral(core->this, l, r); }
                 )*
 
 Shift   = l:Sum
@@ -690,9 +693,10 @@ IF_KW        = "Αν"
 THEN_KW      = "τότε"
 ELSE_KW      = "Αλλιώς"
 FOR_KW       = "Για"
+STEP_KW      = "βήμα"
 WHILE_KW     = "Οσο"
 AS_KW        = "ως"
-IN_KW        = "in"
+IN_KW        = "από"
 
 TRUE_KW      = "αληθής"
 FALSE_KW     = "ψευδής"
@@ -703,9 +707,9 @@ NULL_KW      = "null"
 KW           = BREAK_KW | CONTINUE_KW | RETURN_KW | FUNC_KW
              | STRUCT_KW | EXTERN_KW | UNMANGLED_KW | IMPORT_KW
              | IF_KW | ELSE_KW | FOR_KW | WHILE_KW | AS_KW
-             | NULL_KW | END_KW | THEN_KW
+             | NULL_KW | END_KW | THEN_KW | TIL_KW
 
-DOT          = !DOUBLE_DOT '.'
+DOT          = '.'
 COLON        = ':'
 
 R_ARROW      = '->'
@@ -729,20 +733,20 @@ B_AND        = !L_AND '&' !'='  -
 EQUALS       = '='  -
 NOT_EQUALS   = '<>'  -
 
-LESSTHAN     = '<'  !'=' -
+LESSTHAN     = '<'  !'=' !'-' -
 MORETHAN     = '>'  !'=' -
 LESSTHAN_EQ  = '<='  -
 MORETHAN_EQ  = '>='  -
 
-B_LSHIFT     = '<<' !'=' -
-B_RSHIFT     = '>>' !'=' -
+B_LSHIFT     = '<<' -
+B_RSHIFT     = '>>' -
 
-DOUBLE_DOT   = '..'  -
+TIL_KW   = 'μέχρι'  -
 
-L_NOT        = '!' !'='  -
-B_NOT        = '~' !'='  -
-PLUS         = '+' !'='   -
-MINUS        = '-' !'='  -
+L_NOT        = '!' -
+B_NOT        = '~' -
+PLUS         = '+' -
+MINUS        = !ASS '-' -
 
 PERCENT = 'mod' !'=' -
 STAR = '*' !'=' -

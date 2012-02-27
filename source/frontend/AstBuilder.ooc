@@ -2,12 +2,11 @@ import io/File, text/[EscapeSequence]
 import structs/[ArrayList, List, Stack, HashMap]
 import ../middle/[Module,Expression,StructDecl,FunctionCall,FunctionDecl,Statement,Statement,Type,VariableAccess,VariableDecl,Node,Scope,If,Conditional,
        Else,Return,IntLiteral,CharLiteral,StringLiteral,ArrayAccess,BoolLiteral,FloatLiteral,Loop,While,FlowControl,Comparison,Parenthesis,UnaryOp,Cast,
-       NullLiteral,BinaryOp,Ternary]
+       NullLiteral,BinaryOp,Ternary,RangeLiteral]
 import Token
 
 parse: extern proto func (AstBuilder, CString) -> Int
 
-RangeLiteral: class {}
 Foreach: class {}
 
 // Basically we push stuff in the stack and modify the stacks last object with the called events.
@@ -347,6 +346,10 @@ AstBuilder: class {
         */
     }
 
+    onForeachStep: unmangled(onForeachStep) func(step: Expression) {
+        //peek(Foreach) step = step
+    }
+
     onForeachEnd: unmangled(onForeachEnd) func -> Foreach {
         null
         //pop(Foreach)
@@ -460,8 +463,7 @@ AstBuilder: class {
     }
 
     onRangeLiteral: unmangled(onRangeLiteral) func (left, right: Expression) -> RangeLiteral {
-        null
-        //RangeLiteral new(left, right, token())
+        RangeLiteral new(left, right, token())
     }
 
     onBinaryLeftShift: unmangled(onBinaryLeftShift) func (left, right: Expression) -> BinaryOp {
