@@ -1,7 +1,7 @@
 import io/File, text/[EscapeSequence]
 import structs/[ArrayList, List, Stack, HashMap]
 import ../middle/[Module,Expression,StructDecl,FunctionCall,FunctionDecl,Statement,Statement,Type,VariableAccess,VariableDecl,Node,Scope,If,Conditional,
-       Else,Return,IntLiteral,CharLiteral,StringLiteral,ArrayAccess,BoolLiteral,FloatLiteral,Loop,While,FlowControl]
+       Else,Return,IntLiteral,CharLiteral,StringLiteral,ArrayAccess,BoolLiteral,FloatLiteral,Loop,While,FlowControl,Comparison]
 import Token
 
 parse: extern proto func (AstBuilder, CString) -> Int
@@ -13,7 +13,6 @@ Cast: class {}
 
 Foreach: class {}
 
-Comparison: class {}
 UnaryOp: class {}
 BinaryOp: class {}
 Ternary: class {}
@@ -394,32 +393,26 @@ AstBuilder: class {
     }
 
     onEquals: unmangled(onEquals) func (left, right: Expression) -> Comparison {
-        null
-        //Comparison new(left, right, CompType equal, token())
+        Comparison new(left, right, ComparisonType eq, token())
     }
 
     onNotEquals: unmangled(onNotEquals) func (left, right: Expression) -> Comparison {
-        null
-        //Comparison new(left, right, CompType notEqual, token())
+        Comparison new(left, right, ComparisonType neq, token())
     }
 
     onLessThan: unmangled(onLessThan) func (left, right: Expression) -> Comparison {
-        null
-        //Comparison new(left, right, CompType smallerThan, token())
+        Comparison new(left, right, ComparisonType lt, token())
     }
 
     onMoreThan: unmangled(onMoreThan) func (left, right: Expression) -> Comparison {
-        null
-        //Comparison new(left, right, CompType greaterThan, token())
+        Comparison new(left, right, ComparisonType gt, token())
     }
 
     onLessThanOrEqual: unmangled(onLessThanOrEqual) func (left, right: Expression) -> Comparison {
-        null
-        //Comparison new(left, right, CompType smallerOrEqual, token())
+        Comparison new(left, right, ComparisonType leqt, token())
     }
     onMoreThanOrEqual: unmangled(onMoreThanOrEqual) func (left, right: Expression) -> Comparison {
-        null
-        //Comparison new(left, right, CompType greaterOrEqual, token())
+        Comparison new(left, right, ComparisonType geqt, token())
     }
 
     onDecLiteral: unmangled(onDecLiteral) func (value: CString) -> IntLiteral {
@@ -479,10 +472,6 @@ AstBuilder: class {
     onMul: unmangled(onMul) func (left, right: Expression) -> BinaryOp {
         null
         //BinaryOp new(left, right, OpType mul, token())
-    }
-    
-    onExp: unmangled(onExp) func(left, right: Expression) -> BinaryOp {
-        null
     }
 
     onDiv: unmangled(onDiv) func (left, right: Expression) -> BinaryOp {

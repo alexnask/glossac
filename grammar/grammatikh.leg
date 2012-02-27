@@ -207,7 +207,6 @@ void *onAdd(void *this, void *left, void *right);
 void *onSub(void *this, void *left, void *right);
 void *onMod(void *this, void *left, void *right);
 void *onMul(void *this, void *left, void *right);
-void *onExp(void *this, void *left, void *right);
 void *onDiv(void *this, void *left, void *right);
 void *onRangeLiteral(void *this, void *left, void *right);
 void *onBinaryLeftShift(void *this, void *left, void *right);
@@ -613,8 +612,7 @@ ProductLogicalNot = L_NOT { tokenPos; } - (inner:Product) - { $$=inner=onLogical
 ProductBinaryNot  = B_NOT { tokenPos; } - (inner:Product) - { $$=inner=onBinaryNot (core->this, inner); }
 
 ProductCore = l:Access
-                    ( EXP { tokenPos; } WS r:Product { $$=l=onExp(core->this, l, r); }
-                    | STAR { tokenPos; } WS r:Access { $$=l=onMul(core->this, l, r); }
+                    ( STAR { tokenPos; } WS r:Access { $$=l=onMul(core->this, l, r); }
                     | SLASH { tokenPos; } WS r:Access { $$=l=onDiv(core->this, l, r); }
                     )*
 
@@ -747,7 +745,6 @@ PLUS         = '+' !'='   -
 MINUS        = '-' !'='  -
 
 PERCENT = 'mod' !'=' -
-EXP = '**' ! '=' -
 STAR = '*' !'=' -
 SLASH = '/' !'=' ![/*] -
 

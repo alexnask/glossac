@@ -78,12 +78,13 @@ Type: class extends Statement {
         type
     }
 
+    // The type is a number type if the structure declaration extends a C number type and our refLevel is 0 :D
     number?: func -> Bool {
-        (ref) ? ref number?() : false
+        refLevel() == 0 && ((ref) ? ref number?() : false)
     }
 
     // Returns true if the two types are compatible, meaning that implicit casts are possible betwwen values of those types :D
-    // Because we don't want to be able t implicitely cast any pointer to any other, we do not check for scalar types but rather for numbers
+    // Because we don't want to be able to implicitely cast any pointer to any other, we do not check for scalar types but rather for numbers
     compatible?: func(other: Type) -> Bool {
         (number?() && other number?())
     }
