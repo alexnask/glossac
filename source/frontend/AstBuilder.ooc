@@ -1,7 +1,7 @@
 import io/File, text/[EscapeSequence]
 import structs/[ArrayList, List, Stack, HashMap]
 import ../middle/[Module,Expression,StructDecl,FunctionCall,FunctionDecl,Statement,Statement,Type,VariableAccess,VariableDecl,Node,Scope,If,Conditional,
-       Else,Return,IntLiteral,CharLiteral,StringLiteral,ArrayAccess,BoolLiteral,FloatLiteral,Loop,While,FlowControl,Comparison,Parenthesis]
+       Else,Return,IntLiteral,CharLiteral,StringLiteral,ArrayAccess,BoolLiteral,FloatLiteral,Loop,While,FlowControl,Comparison,Parenthesis,UnaryOp]
 import Token
 
 parse: extern proto func (AstBuilder, CString) -> Int
@@ -13,11 +13,8 @@ Cast: class {}
 
 Foreach: class {}
 
-UnaryOp: class {}
 BinaryOp: class {}
 Ternary: class {}
-AddressOf: class {}
-Dereference: class {}
 
 // Basically we push stuff in the stack and modify the stacks last object with the called events.
 // At the end, the stack should contain only Modules (?)
@@ -519,32 +516,27 @@ AstBuilder: class {
     }
 
     onLogicalNot: unmangled(onLogicalNot) func (inner: Expression) -> UnaryOp {
-        null
-        //UnaryOp new(inner, UnaryOpType logicalNot, token())
+        UnaryOp new(inner, UnaryOpType logicalNot, token())
     }
 
     onBinaryNot: unmangled(onBinaryNot) func (inner: Expression) -> UnaryOp {
-        null
-        //UnaryOp new(inner, UnaryOpType binaryNot, token())
+        UnaryOp new(inner, UnaryOpType binaryNot, token())
     }
 
     onUnaryMinus: unmangled(onUnaryMinus) func (inner: Expression) -> UnaryOp {
-        null
-        //UnaryOp new(inner, UnaryOpType unaryMinus, token())
+        UnaryOp new(inner, UnaryOpType unaryMinus, token())
     }
 
     onParenthesis: unmangled(onParenthesis) func (inner: Expression) -> Parenthesis {
         Parenthesis new(inner, token())
     }
 
-    onAddressOf: unmangled(onAddressOf) func (inner: Expression) -> AddressOf {
-        null
-        //AddressOf new(inner, inner token)
+    onAddressOf: unmangled(onAddressOf) func (inner: Expression) -> UnaryOp {
+        UnaryOp new(inner, UnaryOpType addressOf, token())
     }
 
-    onDereference: unmangled(onDereference) func (inner: Expression) -> Dereference {
-        null
-        //Dereference new(inner, token())
+    onDereference: unmangled(onDereference) func (inner: Expression) -> UnaryOp {
+        UnaryOp new(inner, UnaryOpType dereference, token())
     }
     
     token: func -> Token {
