@@ -467,38 +467,31 @@ AstBuilder: class {
     }
 
     onBinaryLeftShift: unmangled(onBinaryLeftShift) func (left, right: Expression) -> BinaryOp {
-        null
-        //BinaryOp new(left, right, OpType lshift, token())
+        BinaryOp new(left, right, BinaryOpType lshift, token())
     }
 
     onBinaryRightShift: unmangled(onBinaryRightShift) func (left, right: Expression) -> BinaryOp {
-        null
-        //BinaryOp new(left, right, OpType rshift, token())
+        BinaryOp new(left, right, BinaryOpType rshift, token())
     }
 
     onLogicalOr: unmangled(onLogicalOr) func (left, right: Expression) -> BinaryOp {
-        null
-        //BinaryOp new(left, right, OpType or, token())
+        BinaryOp new(left, right, BinaryOpType or, token())
     }
 
     onLogicalAnd: unmangled(onLogicalAnd) func (left, right: Expression) -> BinaryOp {
-        null
-        //BinaryOp new(left, right, OpType and, token())
+        BinaryOp new(left, right, BinaryOpType and, token())
     }
 
     onBinaryOr: unmangled(onBinaryOr) func (left, right: Expression) -> BinaryOp {
-        null
-        //BinaryOp new(left, right, OpType bOr, token())
+        BinaryOp new(left, right, BinaryOpType bOr, token())
     }
 
     onBinaryXor: unmangled(onBinaryXor) func (left, right: Expression) -> BinaryOp {
-        null
-        //BinaryOp new(left, right, OpType bXor, token())
+        BinaryOp new(left, right, BinaryOpType bXor, token())
     }
 
     onBinaryAnd: unmangled(onBinaryAnd) func (left, right: Expression) -> BinaryOp {
-        null
-        //BinaryOp new(left, right, OpType bAnd, token())
+        BinaryOp new(left, right, BinaryOpType bAnd, token())
     }
 
     onLogicalNot: unmangled(onLogicalNot) func (inner: Expression) -> UnaryOp {
