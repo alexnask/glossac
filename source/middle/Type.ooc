@@ -83,6 +83,39 @@ Type: class extends Statement {
         refLevel() == 0 && ((ref) ? ref number?() : false)
     }
 
+    integer?: func -> Bool {
+        refLevel() == 0 && ((ref) ? ref integer?() : false)
+    }
+
+    floating?: func -> Bool {
+        refLevel() == 0 && ((ref) ? ref floating?() : false)
+    }
+
+    // Returns this or other, depending on wich of the two number types is of "higher order". Yes I know my method sucks
+    // The order goes like this:
+    // long double
+    // double
+    // float
+    // unsigned long int
+    // long int
+    // unsigned int
+    // int
+    // ... 
+    against: func(other: Type) -> Type {
+        if(!number?() || !other number?()) return this
+        thisExtName := (ref externName) ? ref externName : name
+        otherExtName := (other ref externName) ? other ref externName : other name
+        if(thisExtName == "long double") return this
+        else if(otherExtName == "long double") return other
+        else if(thisExtName == "double") return this
+        else if(otherExtName == "double") return other
+        else if(thisExtName == "float") return this
+        else if(otherExtName == "float") return other
+        else if(thisExtName == "long int") return this
+        else if(otherExtName == "long int") return other
+        this
+    }
+
     // Returns true if the two types are compatible, meaning that implicit casts are possible betwwen values of those types :D
     // Because we don't want to be able to implicitely cast any pointer to any other, we do not check for scalar types but rather for numbers
     compatible?: func(other: Type) -> Bool {

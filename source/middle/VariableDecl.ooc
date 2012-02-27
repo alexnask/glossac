@@ -1,4 +1,4 @@
-import Expression,Decl,Resolver,Type
+import Expression,Decl,Resolver,Type,NullLiteral
 
 VariableDecl: class extends Decl {
     expr: Expression = null // This is the default expression of to be assigned to the variable once declared
@@ -27,7 +27,8 @@ VariableDecl: class extends Decl {
         type resolve(resolver)
         if(expr) {
             expr resolve(resolver)
-            if(expr getType() != type) {
+            // We allow implicit casting of null to a pointer type :)
+            if(expr getType() != type && !(type pointer?() && expr instanceOf?(NullLiteral))) {
                 resolver fail("Type mismatch, expected " + type toString() + " got " + expr getType() toString(), token)
             }
         }

@@ -1,17 +1,14 @@
 import io/File, text/[EscapeSequence]
 import structs/[ArrayList, List, Stack, HashMap]
 import ../middle/[Module,Expression,StructDecl,FunctionCall,FunctionDecl,Statement,Statement,Type,VariableAccess,VariableDecl,Node,Scope,If,Conditional,
-       Else,Return,IntLiteral,CharLiteral,StringLiteral,ArrayAccess,BoolLiteral,FloatLiteral,Loop,While,FlowControl,Comparison,Parenthesis,UnaryOp,Cast]
+       Else,Return,IntLiteral,CharLiteral,StringLiteral,ArrayAccess,BoolLiteral,FloatLiteral,Loop,While,FlowControl,Comparison,Parenthesis,UnaryOp,Cast,
+       NullLiteral,BinaryOp]
 import Token
 
 parse: extern proto func (AstBuilder, CString) -> Int
 
-NullLiteral: class {}
 RangeLiteral: class {}
-
 Foreach: class {}
-
-BinaryOp: class {}
 Ternary: class {}
 
 // Basically we push stuff in the stack and modify the stacks last object with the called events.
@@ -432,8 +429,7 @@ AstBuilder: class {
     }
 
     onNull: unmangled(onNull) func -> NullLiteral {
-        null
-        //NullLiteral new(token())
+        NullLiteral new(token())
     }
 
     onTernary: unmangled(onTernary) func (condition, ifTrue, ifFalse: Expression) -> Ternary {
@@ -442,33 +438,27 @@ AstBuilder: class {
     }
 
     onAssign: unmangled(onAssign) func (left, right: Expression) -> BinaryOp {
-        null
-        //BinaryOp new(left, right, OpType ass, token())
+        BinaryOp new(left, right, BinaryOpType ass, token())
     }
 
     onAdd: unmangled(onAdd) func (left, right: Expression) -> BinaryOp {
-        null
-        //BinaryOp new(left, right, OpType add, token())
+        BinaryOp new(left, right, BinaryOpType add, token())
     }
 
     onSub: unmangled(onSub) func (left, right: Expression) -> BinaryOp {
-        null
-        //BinaryOp new(left, right, OpType sub, token())
+        BinaryOp new(left, right, BinaryOpType sub, token())
     }
 
     onMod: unmangled(onMod) func (left, right: Expression) -> BinaryOp {
-        null
-        //BinaryOp new(left, right, OpType mod, token())
+        BinaryOp new(left, right, BinaryOpType mod, token())
     }
 
     onMul: unmangled(onMul) func (left, right: Expression) -> BinaryOp {
-        null
-        //BinaryOp new(left, right, OpType mul, token())
+        BinaryOp new(left, right, BinaryOpType mul, token())
     }
 
     onDiv: unmangled(onDiv) func (left, right: Expression) -> BinaryOp {
-        null
-        //BinaryOp new(left, right, OpType div, token())
+        BinaryOp new(left, right, BinaryOpType div, token())
     }
 
     onRangeLiteral: unmangled(onRangeLiteral) func (left, right: Expression) -> RangeLiteral {
