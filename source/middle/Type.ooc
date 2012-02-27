@@ -103,8 +103,8 @@ Type: class extends Statement {
     // ... 
     against: func(other: Type) -> Type {
         if(!number?() || !other number?()) return this
-        thisExtName := (ref externName) ? ref externName : name
-        otherExtName := (other ref externName) ? other ref externName : other name
+        thisExtName := (ref externName != "") ? ref externName : name
+        otherExtName := (other ref externName != "") ? other ref externName : other name
         if(thisExtName == "long double") return this
         else if(otherExtName == "long double") return other
         else if(thisExtName == "double") return this
