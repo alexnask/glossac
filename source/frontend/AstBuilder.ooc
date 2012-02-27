@@ -1,7 +1,7 @@
 import io/File, text/[EscapeSequence]
 import structs/[ArrayList, List, Stack, HashMap]
 import ../middle/[Module,Expression,StructDecl,FunctionCall,FunctionDecl,Statement,Statement,Type,VariableAccess,VariableDecl,Node,Scope,If,Conditional,
-       Else,Return,IntLiteral,CharLiteral,StringLiteral,ArrayAccess,BoolLiteral,FloatLiteral,Loop,While,FlowControl,Comparison]
+       Else,Return,IntLiteral,CharLiteral,StringLiteral,ArrayAccess,BoolLiteral,FloatLiteral,Loop,While,FlowControl,Comparison,Parenthesis]
 import Token
 
 parse: extern proto func (AstBuilder, CString) -> Int
@@ -16,7 +16,6 @@ Foreach: class {}
 UnaryOp: class {}
 BinaryOp: class {}
 Ternary: class {}
-Parenthesis: class {}
 AddressOf: class {}
 Dereference: class {}
 
@@ -535,8 +534,7 @@ AstBuilder: class {
     }
 
     onParenthesis: unmangled(onParenthesis) func (inner: Expression) -> Parenthesis {
-        null
-        //Parenthesis new(inner, token())
+        Parenthesis new(inner, token())
     }
 
     onAddressOf: unmangled(onAddressOf) func (inner: Expression) -> AddressOf {
