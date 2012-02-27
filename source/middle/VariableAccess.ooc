@@ -38,6 +38,7 @@ VariableAccess: class extends Expression {
             // We dereference the expression to a refLevel of 1, meaning that the final expression will still be a pointer and the C backend will use the '->' operator to access the field
             if(expr getType() refLevel() > 1) {
                 expr = expr pointerize(1 - expr getType() refLevel())
+                expr resolve(resolver)
             }
         }
         resolver pop(this)

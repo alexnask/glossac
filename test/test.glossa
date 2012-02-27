@@ -55,7 +55,7 @@ other : char[][][]
     e <- other[0][0] : char[] // These statements are equivalent
     {
         d <- 2 : int
-        Οσο e[0] = -d
+        Οσο e[0] = (-d ως char)
             Αν (αληθής) τότε
                 συνέχισε
             Τέλος

@@ -1,15 +1,13 @@
 import io/File, text/[EscapeSequence]
 import structs/[ArrayList, List, Stack, HashMap]
 import ../middle/[Module,Expression,StructDecl,FunctionCall,FunctionDecl,Statement,Statement,Type,VariableAccess,VariableDecl,Node,Scope,If,Conditional,
-       Else,Return,IntLiteral,CharLiteral,StringLiteral,ArrayAccess,BoolLiteral,FloatLiteral,Loop,While,FlowControl,Comparison,Parenthesis,UnaryOp]
+       Else,Return,IntLiteral,CharLiteral,StringLiteral,ArrayAccess,BoolLiteral,FloatLiteral,Loop,While,FlowControl,Comparison,Parenthesis,UnaryOp,Cast]
 import Token
 
 parse: extern proto func (AstBuilder, CString) -> Int
 
 NullLiteral: class {}
 RangeLiteral: class {}
-
-Cast: class {}
 
 Foreach: class {}
 
@@ -307,13 +305,12 @@ AstBuilder: class {
 
     // variable access
     onVarAccess: unmangled(onVarAccess) func (expr: Expression, name: CString) -> Expression {
-        return VariableAccess new(name toString(), expr, token())
+        VariableAccess new(name toString(), expr, token())
     }
 
     // cast
     onCast: unmangled(onCast) func (expr: Expression, type: Type) -> Cast {
-        null
-        //return Cast new(expr, type, token())
+        Cast new(expr, type, token())
     }
 
     // A block is simply a Scope, used for local variable declarations etc
@@ -376,7 +373,6 @@ AstBuilder: class {
     }
 
     onTypeArg: unmangled(onTypeArg) func (type: Type) {
-        // TODO: add check for extern function (TypeArgs are illegal in non-extern functions.)
         peek(List<Node>) add(VariableDecl new("", type, token()))
     }
 
