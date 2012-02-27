@@ -519,7 +519,7 @@ Foreach = FOR_KW { tokenPos; }
           - WS decl:ImplicitDecl WS
           - IN_KW
           - range:Range WS { onForeachStart(core->this, decl, range); }
-          ( - STEP_KW - step:Expr WS { onForeachStep(core->this, step); } )
+          ( - STEP_KW - step:Expr WS { onForeachStep(core->this, step); } )?
           ( - EOL )?
           - Body
           - END_KW
@@ -547,7 +547,6 @@ Expr     =   v:VariableDecl -
 
 BinaryOperation = Assignment
 
-# TODO: Fix some cases where assign is mixed up with lesser than unary minus
 Assignment = l: Ternary
                 ( ASS            { tokenPos; }  WS   r: Ternary               { $$=l=onAssign(core->this, l, r); }
                 | ASS            { tokenPos; }  WS   r: Ternary ~{  missingOp("<-") }   { $$=l=onAssign(core->this, l, r); }
@@ -707,7 +706,7 @@ NULL_KW      = "null"
 KW           = BREAK_KW | CONTINUE_KW | RETURN_KW | FUNC_KW
              | STRUCT_KW | EXTERN_KW | UNMANGLED_KW | IMPORT_KW
              | IF_KW | ELSE_KW | FOR_KW | WHILE_KW | AS_KW
-             | NULL_KW | END_KW | THEN_KW | TIL_KW
+             | NULL_KW | END_KW | THEN_KW | TIL_KW | STEP_KW
 
 DOT          = '.'
 COLON        = ':'

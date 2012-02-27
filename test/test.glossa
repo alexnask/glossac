@@ -58,6 +58,9 @@ other : char[][][]
 Τέλος
 
 Συνάρτηση fib (iter: int) : uint
+    Για i από 0 μέχρι 10
+        fib(i)
+    Τέλος
     f <- null : char*
     d <- other[0,0] : char[]
     e <- other[0][0] : char[] // These statements are equivalent

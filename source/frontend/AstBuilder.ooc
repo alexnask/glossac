@@ -2,12 +2,10 @@ import io/File, text/[EscapeSequence]
 import structs/[ArrayList, List, Stack, HashMap]
 import ../middle/[Module,Expression,StructDecl,FunctionCall,FunctionDecl,Statement,Statement,Type,VariableAccess,VariableDecl,Node,Scope,If,Conditional,
        Else,Return,IntLiteral,CharLiteral,StringLiteral,ArrayAccess,BoolLiteral,FloatLiteral,Loop,While,FlowControl,Comparison,Parenthesis,UnaryOp,Cast,
-       NullLiteral,BinaryOp,Ternary,RangeLiteral]
+       NullLiteral,BinaryOp,Ternary,RangeLiteral,Foreach]
 import Token
 
 parse: extern proto func (AstBuilder, CString) -> Int
-
-Foreach: class {}
 
 // Basically we push stuff in the stack and modify the stacks last object with the called events.
 // At the end, the stack should contain only Modules (?)
@@ -337,22 +335,19 @@ AstBuilder: class {
     }
 
     // foreach
-    onForeachStart: unmangled(onForeachStart) func (decl, collec: Expression) {
-        /*
+    onForeachStart: unmangled(onForeachStart) func (decl: Expression, range: RangeLiteral) {
         if(decl instanceOf?(Stack)) {
             decl = decl as Stack<VariableDecl> pop()
         }
-        stack push(Foreach new(decl, collec, token()))
-        */
+        stack push(Foreach new(decl, range, token()))
     }
 
     onForeachStep: unmangled(onForeachStep) func(step: Expression) {
-        //peek(Foreach) step = step
+        peek(Foreach) step = step
     }
 
     onForeachEnd: unmangled(onForeachEnd) func -> Foreach {
-        null
-        //pop(Foreach)
+        pop(Foreach)
     }
 
     // while

@@ -1,6 +1,6 @@
 import structs/Stack
 import ../frontend/Token
-import Module,FunctionDecl,StructDecl,VariableDecl,Node,Scope,Type,FunctionDecl,Loop
+import Module,FunctionDecl,StructDecl,VariableDecl,Node,Scope,Type,FunctionDecl,Loop,Foreach
 
 Resolver: class {
     parents := Stack<Node> new()
@@ -87,6 +87,8 @@ Resolver: class {
                     if(decl name == name) found = decl
                 )
                 if(found) return found
+            } else if(node instanceOf?(Foreach)) { // Foreach variable
+                if(node as Foreach decl as VariableDecl name == name) return node as Foreach decl as VariableDecl
             }
         }
         null
