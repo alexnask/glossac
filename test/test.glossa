@@ -24,6 +24,11 @@
 Δομή double εξωτερική
 Τέλος
 
+Δομή range
+    min: int
+    max: int
+Τέλος
+
 Δομή test
     a: int
     b: void*
@@ -40,6 +45,7 @@ other : char[][][]
 // Unicode identifiers not valid yet :/
 Συνάρτηση a (arg: test*) : int
     arg2: test**
+    d <- (arg.a) ? arg : arg2@ : test*
     Αν arg.a < arg2.a τότε
         Γύρνα arg.a
     Αλλιώς
@@ -54,7 +60,7 @@ other : char[][][]
     e <- other[0][0] : char[] // These statements are equivalent
     {
         d <- 2 : int
-        d <- 1.2 - d
+        d <- (αληθής) ? 1.2 ως int mod d : ψευδής
         Οσο e[0] = (-d ως char) και d = αληθής
             Αν (αληθής) τότε
                 συνέχισε

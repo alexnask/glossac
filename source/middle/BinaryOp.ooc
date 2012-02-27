@@ -37,7 +37,7 @@ BinaryOp: class extends Expression {
                 if(left getType() != right getType() && !(left getType() pointer?() && right instanceOf?(NullLiteral))) resolver fail("Type mismatch (expected %s, got %s)" format(left getType() toString(), right getType() toString()), token)
                 type = left getType()
             case BinaryOpType mod =>
-                if(!left getType() integer?() || !right getType() integer?()) resolver fail("Operator % can only be applied to integers (got %s and %s)" format(left getType() toString(), right getType() toString()), token)
+                if(!left getType() integer?() || !right getType() integer?()) resolver fail("Operator mod can only be applied to integers (got %s and %s)" format(left getType() toString(), right getType() toString()), token)
                 type = left getType()
             case =>
                 if(optype == BinaryOpType add || optype == BinaryOpType sub || optype == BinaryOpType mul || optype == BinaryOpType div) {
@@ -65,7 +65,7 @@ BinaryOp: class extends Expression {
             case BinaryOpType sub => "-"
             case BinaryOpType mul => "*"
             case BinaryOpType div => "/"
-            case BinaryOpType mod => "%"
+            case BinaryOpType mod => "mod"
             case BinaryOpType lshift => "<<"
             case BinaryOpType rshift => ">>"
             case BinaryOpType or => "ή"

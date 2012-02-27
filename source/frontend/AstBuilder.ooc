@@ -2,14 +2,13 @@ import io/File, text/[EscapeSequence]
 import structs/[ArrayList, List, Stack, HashMap]
 import ../middle/[Module,Expression,StructDecl,FunctionCall,FunctionDecl,Statement,Statement,Type,VariableAccess,VariableDecl,Node,Scope,If,Conditional,
        Else,Return,IntLiteral,CharLiteral,StringLiteral,ArrayAccess,BoolLiteral,FloatLiteral,Loop,While,FlowControl,Comparison,Parenthesis,UnaryOp,Cast,
-       NullLiteral,BinaryOp]
+       NullLiteral,BinaryOp,Ternary]
 import Token
 
 parse: extern proto func (AstBuilder, CString) -> Int
 
 RangeLiteral: class {}
 Foreach: class {}
-Ternary: class {}
 
 // Basically we push stuff in the stack and modify the stacks last object with the called events.
 // At the end, the stack should contain only Modules (?)
@@ -433,8 +432,7 @@ AstBuilder: class {
     }
 
     onTernary: unmangled(onTernary) func (condition, ifTrue, ifFalse: Expression) -> Ternary {
-        null
-        //Ternary new(condition, ifTrue, ifFalse, token())
+        Ternary new(condition, ifTrue, ifFalse, token())
     }
 
     onAssign: unmangled(onAssign) func (left, right: Expression) -> BinaryOp {
