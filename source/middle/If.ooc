@@ -12,7 +12,7 @@ If: class extends Conditional {
         if(resolved?) return
         resolver push(this)
         condition resolve(resolver)
-        if(condition getType() pointerLevel() < 1 && !condition getType() number?()) resolver fail("Conditional expression neither a number nor a pointer", token)
+        if(!condition getType() scalar?()) resolver fail("Conditional expression should be of a scalar type (got %s)" format(condition getType() toString()), token)
         if(body) body resolve(resolver)
         resolver pop(this)
         resolved? = true

@@ -26,8 +26,8 @@ Type: class extends Statement {
         instanceOf?(ArrayType)
     }
 
-    number?: func -> Bool {
-        (ref) ? ref number?() : false
+    scalar?: func -> Bool {
+        pointer?() || ((ref) ? ref number?() && !array?() : false)
     }
 
     refLevel: func -> SSizeT { // Function that returns the level of the pointerization of the type
@@ -78,7 +78,12 @@ Type: class extends Statement {
         type
     }
 
+    number?: func -> Bool {
+        (ref) ? ref number?() : false
+    }
+
     // Returns true if the two types are compatible, meaning that implicit casts are possible betwwen values of those types :D
+    // Because we don't want to be able t implicitely cast any pointer to any other, we do not check for scalar types but rather for numbers
     compatible?: func(other: Type) -> Bool {
         (number?() && other number?())
     }

@@ -41,10 +41,10 @@ other : char[][][]
 
 // Unicode identifiers not valid yet :/
 Συνάρτηση a (arg: test*) : int
-    Αν arg.a τότε
+    Αν arg τότε
         Γύρνα arg.a
     Αλλιώς
-        Γύρνα arg.a
+        Γύρνα 1.2
     Τέλος
     a(arg)
 Τέλος
@@ -54,7 +54,7 @@ other : char[][][]
     e <- other[0][0] : char[] // These statements are equivalent
     {
         d <- 2 : int
-        Οσο αληθής
+        Οσο e
             Αν αληθής τότε
                 συνέχισε
             Τέλος
