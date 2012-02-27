@@ -41,7 +41,7 @@ other : char[][][]
 
 // Unicode identifiers not valid yet :/
 Συνάρτηση a (arg: test*) : int
-    arg2: test*
+    arg2: test**
     Αν arg.a < arg2.a τότε
         Γύρνα arg.a
     Αλλιώς

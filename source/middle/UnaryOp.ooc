@@ -38,7 +38,7 @@ UnaryOp: class extends Expression {
                 type = PointerType new(inner getType())
                 type resolve(resolver)
             case UnaryOpType dereference =>
-                if(!inner getType() pointer?()) resolver fail("Yuu can only dereference pointer types (got %s)" format(inner getType() toString()), token)
+                if(!inner getType() pointer?()) resolver fail("You can only dereference pointer types (got %s)" format(inner getType() toString()), token)
                 type = inner getType() dereference(1)
                 type resolve(resolver)
             case =>
@@ -53,7 +53,7 @@ UnaryOp: class extends Expression {
     }
 
     toString: func -> String {
-        "%s %s" format(
+        "%s%s" format(
             match(optype) {
                 case UnaryOpType logicalNot => "!"
                 case UnaryOpType binaryNot  => "~"
