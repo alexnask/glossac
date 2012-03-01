@@ -21,7 +21,7 @@ FunctionDecl: class extends Decl {
             argument resolve(resolver)
         }
         if(isextern?() && body && body list getSize() > 0) resolver fail("Extern function " + name + " can't have a function body", body token)
-        if(body) {
+        if(body && body list getSize() > 0) {
             body resolve(resolver)
             // Ok all is good up to now, so we should determine if the function returns as it should or wether we need to make an autoreturn happen
             if(returnType && returnType != Type _void) {

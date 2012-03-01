@@ -326,18 +326,17 @@ FunctionDeclBody = (
                               { onFunctionArgsEnd(core->this) }
             )?
 
-            # modifiers
-            (-  ( externName:ExternName  { onFunctionExtern(core->this, externName) }
-                | unmangledName:UnmangledName { onFunctionUnmangled(core->this, unmangledName) }
-                )
-            )*
-
             # return type is optional
             (
                 - ':'
                 - t:Type ~{ error(core->this, EXP_RET_TYPE, "Missing return type.\n", G->pos + G->offset) }
                           { onFunctionReturnType(core->this, t) }
             )?
+            # modifiers
+            (-  ( externName:ExternName  { onFunctionExtern(core->this, externName) }
+                | unmangledName:UnmangledName { onFunctionUnmangled(core->this, unmangledName) }
+                )
+            )*
             ( - EOL )?
             # body is optional (for abstract/extern-named functions)
             (

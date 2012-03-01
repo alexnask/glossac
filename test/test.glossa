@@ -1,5 +1,4 @@
-Χρήση woot
-Εισήγαγε path/[one,two]
+Χρήση core
 //TODO: Fix them unicode problems :/
 
 // Note that all types are declared as structures, even those wich are really not in C.
@@ -29,8 +28,9 @@
     max: int
 Τέλος
 
-Συνάρτηση printf (char[], ...) εξωτερική
-Τέλος
+Συνάρτηση printf (char[], ...) εξωτερική Τέλος
+
+Συνάρτηση atoi (char[]) : int εξωτερική Τέλος
 
 Συνάρτηση fib (iter: int) : int
     Αν iter <= 1 τότε
@@ -40,6 +40,11 @@
 Τέλος
 
 Συνάρτηση main (argc : int, argv : char[][]) : int
+    a <- 8 : int
+    Αν argc > 1 τότε
+        a <- atoi(argv[1])
+    Τέλος
+    printf("A pretty big number: %d", fib(8))
     0
 Τέλος
 
