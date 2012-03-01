@@ -57,7 +57,12 @@ StructDecl: class extends Decl {
     toString: func -> String {
         ret := "Δομή "
         ret += type toString() + " "
-        if(isextern?()) ret += "εξωτερική(" + externName + ") "
+        if(isextern?()) ret += "εξωτερική(" + externName + ")"
+        ret += "\n"
+        fields each(|field|
+            ret += field toString() + "\n"
+        )
+        ret += "Τέλος"
         ret
     }
 }

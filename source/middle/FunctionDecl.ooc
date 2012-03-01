@@ -68,7 +68,7 @@ FunctionDecl: class extends Decl {
             ret += arg toString()
         }
         ret += ") : "
-        ret += returnType toString()
+        ret += returnType toString() + "\n %s \nΤέλος" format(body ? body toString() : "")
         ret
     }
     

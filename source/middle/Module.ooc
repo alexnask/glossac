@@ -50,7 +50,17 @@ Module: class extends Node {
     }
     
     toString: func -> String {
-        "Module[" + path + "]"
+        ret: String = ""
+        for(sd in structures) {
+            ret += sd toString() + "\n"
+        }
+        for(vd in variables) {
+            ret += vd toString() + "\n"
+        }
+        for(fd in functions) {
+            ret += fd toString() + "\n"
+        }
+        ret
     }
     
     symbol: func(name: String) -> Node {
