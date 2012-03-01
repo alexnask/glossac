@@ -29,51 +29,17 @@
     max: int
 Τέλος
 
-Δομή test
-    a: int
-    b: void*
-    c: char
+Συνάρτηση printf (char[], ...) εξωτερική
 Τέλος
 
-other : char[][][]
-
-// Unicode characters not valid yet :/
-Συνάρτηση b : char
-    '\n'
-Τέλος
-
-// Unicode identifiers not valid yet :/
-Συνάρτηση a (arg: test*) : int
-    {
-        d <- 0 μέχρι 10 : range
-    }
-    arg2: test**
-    d <- (arg.a) ? arg : arg2@ : test*
-    Αν arg.a < arg2.a τότε
-        Γύρνα arg.a
-    Αλλιώς
-        Γύρνα 1.2
-    Τέλος
-    a(arg)
-Τέλος
-
-Συνάρτηση fib (iter: int) : uint
-    someRange <- 0 μέχρι 10 : range
-    Για i από someRange βήμα 2
-        fib(i)
-    Τέλος
-    f <- null : char*
-    d <- other[0,0] : char[]
-    e <- other[0][0] : char[] // These statements are equivalent
-    Αν αληθής τότε
-        fib(ψευδής)
-    Τέλος
-    /*
+Συνάρτηση fib (iter: int) : int
     Αν iter <= 1 τότε
         Γύρνα iter
     Τέλος
     fib(iter - 1) + fib(iter - 2)
-    */
+Τέλος
+
+Συνάρτηση main (argc : int, argv : char[][]) : int
     0
 Τέλος
 

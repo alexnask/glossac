@@ -363,7 +363,7 @@ AstBuilder: class {
      * Arguments
      */
     onVarArg: unmangled(onVarArg) func (name: CString) {
-        peek(List<Node>) add(VariableDecl new(name toString(), VarArgType new(token()), token()))
+        peek(List<Node>) add(VariableDecl new((name) ? name toString() : "", VarArgType new(nullToken), token()))
     }
 
     onTypeArg: unmangled(onTypeArg) func (type: Type) {

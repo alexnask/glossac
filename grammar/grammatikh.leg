@@ -313,11 +313,6 @@ Decl    = ( FunctionDecl
 FunctionDecl =
             FUNC_KW -
             name:IDENT { tokenPos; onFunctionStart(core->this, name) }
-            # modifiers
-            (-  ( externName:ExternName  { onFunctionExtern(core->this, externName) }
-                | unmangledName:UnmangledName { onFunctionUnmangled(core->this, unmangledName) }
-                )
-            )*
             - FunctionDeclBody
 
 FunctionDeclBody = (
@@ -330,6 +325,12 @@ FunctionDeclBody = (
                 - CLOS_PAREN ~{ error(core->this, EXP_ARG, "Malformed function argument (remember, it's `name: Type` in ooc, not `Type name`)\n", G->pos + G->offset) }
                               { onFunctionArgsEnd(core->this) }
             )?
+
+            # modifiers
+            (-  ( externName:ExternName  { onFunctionExtern(core->this, externName) }
+                | unmangledName:UnmangledName { onFunctionUnmangled(core->this, unmangledName) }
+                )
+            )*
 
             # return type is optional
             (
