@@ -29,7 +29,6 @@
 Τέλος
 
 Συνάρτηση printf (char[], ...) εξωτερική Τέλος
-
 Συνάρτηση atoi (char[]) : int εξωτερική Τέλος
 
 Συνάρτηση fib (iter: int) : int
@@ -44,7 +43,7 @@
     Αν argc > 1 τότε
         a <- atoi(argv[1])
     Τέλος
-    printf("A pretty big number: %d", fib(8))
+    printf("A pretty big number: %d", fib(a))
     0
 Τέλος
 
